@@ -1,29 +1,49 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import Header from "./Components/Header"
 import Stepper from "./Components/Stepper"
+import PageTurnButtons from "./Components/PageTurnButtons"
+import UploadView from "./Views/UploadView"
+import QuestionsView from "./Views/QuestionsView"
 
 function App() {
+  // State to track which view is currently active
+  const [currentView, setCurrentView] = useState(0);
+  
+  // Array of views to make navigation easy
+  const views = [
+    <UploadView />,
+    <QuestionsView />
+  ];
 
+  // Function to go to next view
+  const goToNext = () => {
+    if (currentView < views.length - 1) {
+      setCurrentView(currentView + 1);
+    }
+  };
+
+  // Function to go to previous view
+  const goToPrevious = () => {
+    if (currentView > 0) {
+      setCurrentView(currentView - 1);
+    }
+  };
 
   return (
-    <div className='p-2 w-screen flex flex-col items-center gap-4'>
-      <div className='w-3/5 h-full border border-stone-200 bg-stone-50 rounded-sm p-2'>
-      <Header/>
-      <Stepper/>
-
-      <section className='flex justify-between mt-4'>
-        <button className='p-2 rounded-lg border-stone-100 text-xs cursor-pointer font-semibold'>Forrige</button>
-        <button className="p-2 cursor-pointer text-xs font-semibold rounded-lg border border-stone-100 text-white bg-gradient-to-r from-blue-400 via-blue-500 to-violet-400">
-  Næste trin
-</button>
-
-
-      </section>        
-      </div>
-      
-
+    <div className='p-10 w-screen flex flex-col items-center gap-4'>
+      <div className='w-3/5 h-full border border-stone-200 bg-slate-50 rounded-sm p-2'>
+        <Header/>
+        <Stepper/>
+        <section>
+          {views[currentView]}
+        </section> 
+        <PageTurnButtons 
+          onNext={goToNext}
+          onPrevious={goToPrevious}
+          canGoNext={currentView < views.length - 1}
+          canGoPrevious={currentView > 0}
+        />               
+      </div>     
     </div>
   )
 }
