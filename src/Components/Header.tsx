@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { Signature } from 'lucide-react';
 
 import React from 'react'
 
@@ -17,8 +18,8 @@ export default function Header() {
                 </section>
                 <div className="bg-gray-100 p-2 rounded-lg flex gap-1 items-center">
                     <FontAwesomeIcon icon={faGlobe} className='text-gray-600 text-xs'/>
-                    <button onClick={() => setLanguage("da")} className={`text-xs px-2 py-1 rounded cursor-pointer ${language === "da" ? "bg-blue-400 text-white" : "bg-transparent"}`}>DA</button>
-                    <button onClick={() => setLanguage("en")} className={`text-xs px-2 py-1 rounded cursor-pointer ${language === "en" ? "bg-blue-400 text-white" : "bg-transparent"}`}>EN</button>
+                    <button onClick={() => setLanguage("da")} className={`text-xs px-2 py-1 rounded cursor-pointer ${language === "da" ? "bg-blue-500 text-white" : "bg-transparent"}`}>DA</button>
+                    <button onClick={() => setLanguage("en")} className={`text-xs px-2 py-1 rounded cursor-pointer ${language === "en" ? "bg-blue-500 text-white" : "bg-transparent"}`}>EN</button>
                 </div>
             </header>
         </div>

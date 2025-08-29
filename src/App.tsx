@@ -4,6 +4,7 @@ import Stepper from "./Components/Stepper"
 import PageTurnButtons from "./Components/PageTurnButtons"
 import UploadView from "./Views/UploadView"
 import QuestionsView from "./Views/QuestionsView"
+import TemplateView from "./Views/TemplateView"
 
 function App() {
   // State to track which view is currently active
@@ -12,7 +13,8 @@ function App() {
   // Array of views to make navigation easy
   const views = [
     <UploadView />,
-    <QuestionsView />
+    <QuestionsView />,
+    <TemplateView />
   ];
 
   // Function to go to next view
@@ -31,7 +33,7 @@ function App() {
 
   return (
     <div className='p-10 w-screen flex flex-col items-center gap-4'>
-      <div className='w-3/5 h-full border border-stone-200 bg-slate-50 rounded-sm p-2'>
+      <div className='w-3/5 h-full border border-stone-200 bg-slate-50 rounded-sm p-4'>
         <Header/>
         <Stepper/>
         <section>

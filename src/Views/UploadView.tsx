@@ -26,16 +26,16 @@ export default function UploadView() {
                             <p className="text-gray-500 text-xs">Upload din CV-fil eller indsæt dit CV-indhold</p>
                         </div>
                         <div className="flex gap-2">
-                            <button onClick={() => setOption("upload")} className={`flex items-center gap-2 cursor-pointer border border-stone-100 rounded-lg py-1 px-2 text-xs ${option === "upload"? "bg-blue-400 text-white" : "bg-transparent"}`}> 
-                                <FontAwesomeIcon icon={faArrowUpFromBracket} className={`text-gray-500 text-xs ${option === "upload"? "bg-blue-400 text-white" : "bg-transparent"}`} />Upload fil</button>
-                            <button onClick={() => setOption("text")} className={`flex items-center gap-2 cursor-pointer border border-stone-100 rounded-lg py-1 px-2 text-xs ${option === "text" ? "bg-blue-400 text-white" : "bg-transparent"}`}> 
-                                <FontAwesomeIcon icon={faCopy} className={`text-gray-600 text-xs ${option === "text" ? "bg-blue-400 text-white" : "bg-transparent"}`} />
+                            <button onClick={() => setOption("upload")} className={`flex items-center gap-2 cursor-pointer border border-stone-100 rounded-lg py-1 px-2 text-xs ${option === "upload"? "bg-blue-500 text-white" : "bg-transparent"}`}> 
+                                <FontAwesomeIcon icon={faArrowUpFromBracket} className={`text-gray-500 text-xs ${option === "upload"? "bg-blue-500 text-white" : "bg-transparent"}`} />Upload fil</button>
+                            <button onClick={() => setOption("text")} className={`flex items-center gap-2 cursor-pointer border border-stone-100 rounded-lg py-1 px-2 text-xs ${option === "text" ? "bg-blue-500 text-white" : "bg-transparent"}`}> 
+                                <FontAwesomeIcon icon={faCopy} className={`text-gray-600 text-xs ${option === "text" ? "bg-blue-500 text-white" : "bg-transparent"}`} />
                             Indsæt tekst</button>
                         </div>   
                     </div>
                     <div className="mt-2">
                         <textarea 
-                        className="w-full h-30 p-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs resize-none"
+                        className="w-full h-30 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs resize-none"
                         placeholder="Indsæt dit CV-indhold"
                         />
                     </div>
@@ -49,7 +49,7 @@ export default function UploadView() {
                     </div>
                     <div className="mt-2">
                         <textarea 
-                        className="w-full h-30 p-2 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs resize-none"
+                        className="w-full h-30 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs resize-none"
                         placeholder="Indsæt jobbeskrivelsen"
                         />
                     </div>
