@@ -31,11 +31,12 @@ function App() {
     }
   };
 
+
   return (
     <div className='p-10 w-screen flex flex-col items-center gap-4'>
       <div className='w-3/5 h-full border border-stone-200 bg-slate-50 rounded-sm p-4'>
         <Header/>
-        <Stepper/>
+        <Stepper currentStep={currentView} />
         <section>
           {views[currentView]}
         </section> 
@@ -44,6 +45,7 @@ function App() {
           onPrevious={goToPrevious}
           canGoNext={currentView < views.length - 1}
           canGoPrevious={currentView > 0}
+          isLastView={currentView === views.length - 1} 
         />               
       </div>     
     </div>

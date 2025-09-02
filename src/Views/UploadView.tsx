@@ -16,7 +16,7 @@ export default function UploadView() {
                     <p className="text-gray-500 text-xs">Tilføj dit CV og jobopslaget for at få personlige forslag</p>
                 </section>
                 
-                <section className="bg-white px-4 py-2 text-center gap-2 border border-stone-100 rounded-lg">
+                <section className="flex flex-col bg-white px-4 py-2 text-center gap-2 border border-stone-100 rounded-lg">
                     <div className="flex items-center justify-between">
                         <div>
                             <div className="flex items-center gap-1">
@@ -33,12 +33,20 @@ export default function UploadView() {
                             Indsæt tekst</button>
                         </div>   
                     </div>
-                    <div className="mt-2">
+                    {option === "upload" ? 
+                    <button className="w-full border-2 border-dotted rounded-lg py-6 border-stone-300 cursor-pointer flex flex-col gap-2 items-center hover:bg-sky-50">
+                        <FontAwesomeIcon icon={faArrowUpFromBracket} className="text-2xl text-gray-500"/>
+                        <p className="font-semibold mb-2 text-sm">Klik for at uploade dit CV</p>
+                        <p className="text-gray-500 text-xs">Understøttede formater: PDF, DOC, DOCX</p>
+                    </button>
+                    : 
+                    <div>
                         <textarea 
                         className="w-full h-30 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs resize-none"
                         placeholder="Indsæt dit CV-indhold"
                         />
-                    </div>
+                    </div> 
+                    }
                 </section>
                 <section className="mt-4 bg-white px-4 py-2 text-center gap-2 border border-stone-100 rounded-lg">
                     <div className="flex items-center justify-between">

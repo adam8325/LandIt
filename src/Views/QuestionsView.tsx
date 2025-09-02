@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileLines } from '@fortawesome/free-regular-svg-icons'
-import { Sparkles, Target, TrendingUp } from 'lucide-react';
+import { Sparkles, Upload, Target, TrendingUp } from 'lucide-react';
 
 
 export default function QuestionsView() {
@@ -21,7 +21,13 @@ export default function QuestionsView() {
                                     <h3 className="text-left font-semibold">Motivation & Match</h3>
                                 </div>                            
                                 <p className="text-gray-500 text-xs">Hvorfor søger du jobbet, og hvorfor passer du godt til det?</p>
-                            </div>                       
+                            </div>         
+                            <button className="gradient-border">
+                                <div className="gradient-border-content flex items-center justify-center gap-2 p-2 text-xs font-semibold cursor-pointer transition-colors duration-200">
+                                    <Sparkles className="w-3 h-3" />
+                                    Generer idéer
+                                </div>
+                            </button>            
                         </div>
                         <div className="mt-3">
                             <textarea 
@@ -29,18 +35,24 @@ export default function QuestionsView() {
                             placeholder="..."
                             />
                         </div>                   
-                        <button className="flex items-center justify-center gap-2 w-full border border-stone-300 rounded-lg p-2 text-xs font-semibold cursor-pointer hover:bg-sky-50"><Sparkles className="w-3 h-3" />Generer idéer</button>
     
                 </section>
                 <section className="flex flex-col gap-2 mt-4 bg-white px-4 py-4 text-center border border-stone-100 rounded-lg">
-                            <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between">
                             <div>
                                 <div className="flex items-center gap-1">
                                     <TrendingUp className="text-blue-500 text-xs w-4 h-4" />
                                     <h3 className="text-left font-semibold">Erfaring & Styrker</h3>
                                 </div>                            
                                 <p className="text-gray-500 text-xs">Hvilke projekter, erfaringer eller resultater viser, at du kan løse opgaverne?</p>
-                            </div>                       
+                            </div> 
+                            <button className="gradient-border">
+                                <div className="gradient-border-content flex items-center justify-center gap-2 p-2 text-xs font-semibold cursor-pointer transition-colors duration-200">
+                                    <Sparkles className="w-3 h-3" />
+                                    Generer idéer
+                                </div>
+                            </button>
+                     
                         </div>
                         <div className="mt-3">
                             <textarea 
@@ -48,7 +60,6 @@ export default function QuestionsView() {
                             placeholder="..."
                             />
                         </div>
-                        <button className="flex items-center justify-center gap-2 w-full border border-stone-300 rounded-lg p-2 text-xs font-semibold cursor-pointer hover:bg-sky-50"><Sparkles className="w-3 h-3" />Generer idéer</button>
                         
                 </section>
             </div>

@@ -1,2 +1,102 @@
 @import "tailwindcss";
 
+
+.gradient-border {
+  position: relative;
+  background: white;
+  border-radius: 0.5rem;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(45deg, #e5e7eb, #3b82f6, #8b5cf6, #e5e7eb);
+  background-size: 300% 300%;
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  animation: shimmer 2s linear infinite;
+}
+
+.gradient-border-content {
+  position: relative;
+  background: white;
+  border-radius: calc(0.5rem - 2px);
+  z-index: 1;
+}
+
+.gradient-border-content:hover {
+  background-color: #f0f9ff;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gradient-divider {
+  position: relative;
+  height: 2px;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 1px;
+}
+
+.gradient-divider::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #e5e7eb, #3b82f6, #8b5cf6, #e5e7eb);
+  background-size: 300% 100%;
+  border-radius: inherit;
+  animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gradient-circle {
+  position: relative;
+  width: 2.25rem; /* w-9 */
+  height: 2.25rem; /* h-9 */
+  border-radius: 50%;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.gradient-circle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899);
+  background-size: 300% 300%;
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  animation: shimmer 2s linear infinite;
+}
+
+.gradient-circle-content {
+  position: relative;
+  background: white;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}

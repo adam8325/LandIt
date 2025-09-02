@@ -5,9 +5,12 @@ interface PageTurnButtonsProps {
     onPrevious: () => void;
     canGoNext: boolean;
     canGoPrevious: boolean;
+    isLastView: boolean;
 }
 
-export default function PageTurnButtons({ onNext, onPrevious, canGoNext, canGoPrevious }: PageTurnButtonsProps) {
+export default function PageTurnButtons({ onNext, onPrevious, canGoNext, canGoPrevious, isLastView }: PageTurnButtonsProps) {
+
+
     return (
         <div className='flex justify-between mt-4'>
             <button 
@@ -24,13 +27,9 @@ export default function PageTurnButtons({ onNext, onPrevious, canGoNext, canGoPr
             <button 
                 onClick={onNext}
                 disabled={!canGoNext}
-                className={`p-2 text-xs font-semibold rounded-lg border border-stone-100 text-white ${
-                    canGoNext 
-                        ? 'cursor-pointer bg-gradient-to-r from-blue-400 via-blue-500 to-violet-400 hover:opacity-90' 
-                        : 'cursor-not-allowed bg-gray-400'
-                }`}
+                className={`p-2 text-xs font-semibold rounded-lg border border-stone-100 text-white cursor-pointer bg-gradient-to-r from-blue-400 via-blue-500 to-violet-400 hover:opacity-90`}
             >
-                Næste trin
+                {isLastView ? 'Generer Ansøgning' : 'Næste trin'}
             </button>
         </div>
     )
