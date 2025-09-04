@@ -1,4 +1,5 @@
 import React from "react";
+import {useRef} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons'
@@ -7,6 +8,29 @@ import { faFileLines } from '@fortawesome/free-regular-svg-icons'
 export default function UploadView() {
 
     const [option, setOption] = React.useState<"upload" | "text">("upload")
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+
+    const handleFileUpload = (event:React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            // Tjek om filen har det rigtige format
+            const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            
+            if (allowedTypes.includes(file.type)) {
+            console.log('Fil uploadet:', file.name);
+            // Her kan du håndtere filen - f.eks. gemme den i state
+            // setUploadedFile(file);
+            } else {
+            alert('Kun PDF, DOC og DOCX filer er tilladt');
+            }
+        }
+    };
+
+    const triggerFileUpload = () => {
+    fileInputRef.current?.click();
+    };
 
     return (
         <div className="mt-4 bg-white p-4 flex flex-col items-center justify-center text-center gap-2 border border-stone-100 rounded-lg h-full w-full">
@@ -34,11 +58,24 @@ export default function UploadView() {
                         </div>   
                     </div>
                     {option === "upload" ? 
-                    <button className="w-full border-2 border-dotted rounded-lg py-6 border-stone-300 cursor-pointer flex flex-col gap-2 items-center hover:bg-sky-50">
-                        <FontAwesomeIcon icon={faArrowUpFromBracket} className="text-2xl text-gray-500"/>
-                        <p className="font-semibold mb-2 text-sm">Klik for at uploade dit CV</p>
-                        <p className="text-gray-500 text-xs">Understøttede formater: PDF, DOC, DOCX</p>
-                    </button>
+                    <div>
+                        <button 
+                            className="w-full border-2 border-dotted rounded-lg py-6 border-stone-300 cursor-pointer flex flex-col gap-2 items-center hover:bg-sky-50"
+                            onClick={triggerFileUpload}
+                        >
+                            <FontAwesomeIcon icon={faArrowUpFromBracket} className="text-2xl text-gray-500"/>
+                            <p className="font-semibold mb-2 text-sm">Klik for at uploade dit CV</p>
+                            <p className="text-gray-500 text-xs">Understøttede formater: PDF, DOC, DOCX</p>
+                        </button>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept=".pdf,.doc,.docx"
+                            onChange={handleFileUpload}
+                            style={{ display: 'none' }}
+                        />
+                    </div>
+                    
                     : 
                     <div>
                         <textarea 
