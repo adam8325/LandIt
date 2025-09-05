@@ -4,16 +4,16 @@ namespace Application.Services
 {
     public class MotivationService
     {
-        private readonly IOpenAIService _openAIService;
+        private readonly IOpenAiService _openAiService;
 
-        public MotivationService(IOpenAIService openAIService)
+        public MotivationService(IOpenAiService openAiService)
         {
-            _openAIService = openAIService;
+            _openAiService = openAiService;
         }
 
         public async Task<List<string>> GenerateIdeasAsync(string cv, string jobPosting)
         {
-            return await _openAIService.GenerateMotivationIdeasAsync(cv, jobPosting);
+            return await _openAiService.GenerateMotivationIdeasAsync(cv, jobPosting);
         }
     }
 }

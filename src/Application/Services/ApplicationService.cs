@@ -4,16 +4,16 @@ namespace Application.Services
 {
     public class ApplicationService
     {
-        private readonly IOpenAIService _openAIService;
+        private readonly IOpenAiService _openAiService;
 
-        public ApplicationService(IOpenAIService openAIService)
+        public ApplicationService(IOpenAiService openAiService)
         {
-            _openAIService = openAIService;
+            _openAiService = openAiService;
         }
 
         public async Task<string> GenerateTemplateAsync(string cv, string jobPosting, string motivation, string style)
         {
-            return await _openAIService.GenerateApplicationAsync(cv, jobPosting, motivation, style);
+            return await _openAiService.GenerateApplicationAsync(cv, jobPosting, motivation, style);
         }
     }
 }

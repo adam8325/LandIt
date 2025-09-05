@@ -2,19 +2,19 @@ using Application.Interfaces;
 
 namespace Application.Services
 {
-    public class CVAndJobPostService
+    public class CvAndJobPostService
     {
-        private readonly IOpenAIService _openAIService;
+        private readonly IOpenAiService _openAiService;
 
-        public CVAndJobPostService(IOpenAIService openAIService)
+        public CvAndJobPostService(IOpenAiService openAiService)
         {
-            _openAIService = openAIService;
+            _openAiService = openAiService;
         }
 
-        public async Task<string> UploadCVAndJobPostingAsync(string cvContent, string jobPostingContent)
+        public async Task<string> UploadCvAndJobPostingAsync(string cvContent, string jobPostingContent)
         {
             // fx returnere et thread_id fra OpenAI
-            return await _openAIService.AnalyzeCVAndJobPostingAsync(cvContent, jobPostingContent);
+            return await _openAiService.AnalyzeCvAndJobPostingAsync(cvContent, jobPostingContent);
         }
     }
 }
