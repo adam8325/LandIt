@@ -1,8 +1,9 @@
 using OpenAI;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+DotNetEnv.Env.Load("../../.env");
 
 var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
     ?? throw new InvalidOperationException("OPENAI_API_KEY not found");
@@ -17,6 +18,7 @@ builder.Services.AddOpenApi();
 // Register controllers
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 
 
