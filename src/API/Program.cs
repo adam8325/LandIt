@@ -1,15 +1,28 @@
 using OpenAI;
 using DotNetEnv;
+using Application.Interfaces;
+using Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load("../../.env");
 
-var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-    ?? throw new InvalidOperationException("OPENAI_API_KEY not found");
+// var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+//     ?? throw new InvalidOperationException("OPENAI_API_KEY not found");
 
-builder.Services.AddSingleton(new OpenAIClient(apiKey));
+// builder.Services.AddSingleton(new OpenAIClient(apiKey));
+builder.Services.AddHttpClient<IOpenAiService, OpenAiService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173") // React dev server
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -31,7 +44,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();

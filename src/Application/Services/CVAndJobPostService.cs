@@ -13,7 +13,7 @@ namespace Application.Services
 
         public async Task<string> UploadCvAndJobPostingAsync(string cvContent, string jobPostingContent)
         {
-            // fx returnere et thread_id fra OpenAI
+            
             return await _openAiService.AnalyzeCvAndJobPostingAsync(cvContent, jobPostingContent);
         }
     }

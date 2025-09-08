@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Services;
 
 namespace Application.Services
 {
@@ -9,6 +10,11 @@ namespace Application.Services
         public ApplicationService(IOpenAiService openAiService)
         {
             _openAiService = openAiService;
+        }
+
+        public Task<string> GenerateApplicationAsync(string cv, string jobPosting, string motivation, string style)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<string> GenerateTemplateAsync(string cv, string jobPosting, string motivation, string style)
