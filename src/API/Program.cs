@@ -15,7 +15,10 @@ DotNetEnv.Env.Load("../../.env");
 
 builder.Services.AddHttpClient<IOpenAiService, OpenAiService>();
 builder.Services.AddScoped<IFileProcessingService, FileProcessingService>();
-builder.Services.AddScoped<CvAndJobPostService>();
+builder.Services.AddScoped<ICvAndJobPostService, CvAndJobPostService>();
+builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddMemoryCache();
+
 
 builder.Services.AddCors(options =>
 {

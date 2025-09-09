@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileLines } from '@fortawesome/free-regular-svg-icons'
 import { Sparkles, Upload, Target, TrendingUp } from 'lucide-react';
 
+type QuestionsViewProps = { sessionId: string | null };
 
-export default function QuestionsView() {
+export default function QuestionsView({ sessionId }: QuestionsViewProps) {
     return (
         <div className="mt-4 bg-white p-4 flex flex-col items-center justify-center text-center gap-2 border border-stone-100 rounded-lg h-full w-full">
             <div className="w-full">

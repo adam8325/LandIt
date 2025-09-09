@@ -10,16 +10,17 @@ function App() {
   // State to track which view is currently active
   const [currentView, setCurrentView] = useState(0);
   
-  // Array of views to make navigation easy
-  const views = [
-    <UploadView />,
-    <QuestionsView />,
-    <TemplateView />
-  ];
+  // State to track session ID across all views
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  
+  // Function to handle session creation from UploadView
+  const handleSessionCreated = (newSessionId: string) => {
+    setSessionId(newSessionId);
+  };
 
   // Function to go to next view
   const goToNext = () => {
-    if (currentView < views.length - 1) {
+    if (currentView < 2) { // 0, 1, 2 are our views
       setCurrentView(currentView + 1);
     }
   };
@@ -31,6 +32,19 @@ function App() {
     }
   };
 
+  // Function to render current view with proper props
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 0:
+        return <UploadView onSessionCreated={handleSessionCreated} />;
+      case 1:
+        return <QuestionsView sessionId={sessionId} />;
+      case 2:
+        return <TemplateView sessionId={sessionId} />;
+      default:
+        return <UploadView onSessionCreated={handleSessionCreated} />;
+    }
+  };
 
   return (
     <div className='p-10 w-screen flex flex-col items-center gap-4'>
@@ -38,14 +52,14 @@ function App() {
         <Header/>
         <Stepper currentStep={currentView} />
         <section>
-          {views[currentView]}
+          {renderCurrentView()}
         </section> 
         <PageTurnButtons 
           onNext={goToNext}
           onPrevious={goToPrevious}
-          canGoNext={currentView < views.length - 1}
+          canGoNext={currentView < 2 && (currentView === 0 ? sessionId !== null : true)}
           canGoPrevious={currentView > 0}
-          isLastView={currentView === views.length - 1} 
+          isLastView={currentView === 2} 
         />               
       </div>     
     </div>

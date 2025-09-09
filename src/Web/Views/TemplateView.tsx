@@ -1,8 +1,9 @@
 import React from "react";
 import { Sparkles, Target, TrendingUp, Linkedin, Globe, Palette, Briefcase, FileText } from 'lucide-react';
 
+type TemplateViewProps = { sessionId: string | null };
 
-export default function TemplateView() {
+export default function TemplateView({ sessionId }: TemplateViewProps) {
     return (
         <div className="mt-4 bg-white p-4 flex flex-col items-center justify-center text-center gap-2 border border-stone-100 rounded-lg h-full w-full">
             <div className="w-full">

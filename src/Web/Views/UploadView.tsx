@@ -6,7 +6,11 @@ import { faFileLines } from '@fortawesome/free-regular-svg-icons'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { cvUploadService } from '../AIService/CvAndJobPostService';
 
-export default function UploadView() {
+type UploadViewProps = {
+  onSessionCreated: (newSessionId: string) => void;
+};
+
+export default function UploadView({ onSessionCreated }: UploadViewProps) {
     const [option, setOption] = useState<"upload" | "text">("upload");
     const [cvText, setCvText] = useState("");
     const [jobPostingText, setJobPostingText] = useState("");
@@ -67,7 +71,8 @@ export default function UploadView() {
 
             // Analysis is successful - don't show the result, just mark as completed
             setIsCompleted(true);
-            console.log('Analysis completed:', response.analysis); // Keep for debugging
+            onSessionCreated(response.sessionId); 
+            console.log('Analysis completed:', response.sessionId); // Keep for debugging
         } catch (err) {
             setError(err instanceof Error ? err.message : "Der opstod en fejl");
         } finally {
@@ -81,13 +86,17 @@ export default function UploadView() {
         setUploadedFile(null);
         setError(null);
         setIsCompleted(false);
+        // setSessionId(null);
         setOption("upload");
     };
 
-    const proceedToNextStep = () => {
-        // TODO: Navigate to next view/step
-        console.log("Proceeding to step 2 - motivation writing");
-    };
+    // const proceedToNextStep = () => {
+    //     if (sessionId) {
+    //         // TODO: Navigate to next view/step with sessionId
+    //         console.log("Proceeding to step 2 with session ID:", sessionId);
+    //         // Example: navigate('/questions', { state: { sessionId } })
+    //     }
+    // };
 
     const getButtonContent = () => {
         if (isLoading) {
@@ -117,7 +126,7 @@ export default function UploadView() {
         }
         
         if (isCompleted) {
-            return 'bg-green-50 text-green-800 border border-green-200 rounded-lg';
+            return 'bg-green-50 border border-green-200 rounded-lg font-semibold text-green-800';
         }
         
         return 'bg-blue-500 text-white hover:bg-blue-600';
@@ -228,7 +237,33 @@ export default function UploadView() {
                         <p className="text-red-600 text-sm">{error}</p>
                     </div>
                 )}
-                
+
+                {/* {isCompleted && (
+                    <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="flex items-center justify-center mb-2">
+                            <FontAwesomeIcon icon={faCheck} className="text-green-600 mr-2" />
+                            <h3 className="font-semibold text-green-800">Dokumenter analyseret!</h3>
+                        </div>
+                        <p className="text-sm text-green-700 mb-3">
+                            Dine dokumenter er blevet analyseret og gemt. Du kan nu fortsætte til næste trin.
+                        </p>
+                        <div className="flex gap-2">
+                            <button 
+                                // onClick={proceedToNextStep}
+                                className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600"
+                            >
+                                Fortsæt til motivationsskrivning
+                            </button>
+                            <button 
+                                onClick={resetForm}
+                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300"
+                            >
+                                Start forfra
+                            </button>
+                        </div>
+                    </div>
+                )} */}
+
                 <div className="mt-6 flex gap-4">
                     <button 
                         onClick={handleSubmit}
