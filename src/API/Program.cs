@@ -2,6 +2,7 @@ using OpenAI;
 using DotNetEnv;
 using Application.Interfaces;
 using Infrastructure.Services;
+using Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,10 @@ DotNetEnv.Env.Load("../../.env");
 //     ?? throw new InvalidOperationException("OPENAI_API_KEY not found");
 
 // builder.Services.AddSingleton(new OpenAIClient(apiKey));
+
 builder.Services.AddHttpClient<IOpenAiService, OpenAiService>();
+builder.Services.AddScoped<IFileProcessingService, FileProcessingService>();
+builder.Services.AddScoped<CvAndJobPostService>();
 
 builder.Services.AddCors(options =>
 {

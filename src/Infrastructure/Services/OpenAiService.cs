@@ -22,10 +22,23 @@ namespace Infrastructure.Services
 
         private async Task<string> CallOpenAiAsync(string prompt)
         {
-            var body = new { model = _model, input = prompt };
+            var body = new
+            {
+                model = _model,
+                messages = new[]
+                {
+                    new
+                    {
+                        role = "user",
+                        content = prompt
+                    }
+                },
+                max_tokens = 1000,
+                temperature = 0.7
+            };
 
             var response = await _httpClient.PostAsync(
-                "https://api.openai.com/v1/responses",
+                "https://api.openai.com/v1/chat/completions",
                 new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
             );
 
@@ -35,10 +48,9 @@ namespace Infrastructure.Services
             using var doc = JsonDocument.Parse(json);
 
             return doc.RootElement
-                .GetProperty("output")[0]
-                .GetProperty("content")[0]
-                .GetProperty("text")
-                .GetProperty("value")
+                .GetProperty("choices")[0]
+                .GetProperty("message")
+                .GetProperty("content")
                 .GetString()!;
         }
 
