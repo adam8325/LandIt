@@ -17,6 +17,7 @@ builder.Services.AddHttpClient<IOpenAiService, OpenAiService>();
 builder.Services.AddScoped<IFileProcessingService, FileProcessingService>();
 builder.Services.AddScoped<ICvAndJobPostService, CvAndJobPostService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IIdeasService, IdeasService>();
 builder.Services.AddMemoryCache();
 
 
