@@ -1,12 +1,15 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Sparkles, Target, TrendingUp, Linkedin, Globe, Palette, Briefcase, FileText } from 'lucide-react';
 
-type TemplateViewProps = { sessionId: string | null };
 
-export default function TemplateView({ sessionId }: TemplateViewProps) {
+// type ElevatorPageProps = { sessionId: string | null };
+
+export default function ElevatorPage() {
     return (
         <div className="mt-4 bg-white p-4 flex flex-col items-center justify-center text-center gap-2 border border-stone-100 rounded-lg h-full w-full">
             <div className="w-full">
+                 <Link to="/" className="btn mt-4">← Back to Home</Link>
                 <section className="my-2 mb-6">
                     <h1 className="font-bold mb-2">Vælg Din Ansøgningsstil</h1>
                     <p className="text-gray-500 text-xs">Vælg en skabelon og tilpas din ansøgning</p>

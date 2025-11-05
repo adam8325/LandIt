@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-regular-svg-icons'
@@ -6,11 +7,11 @@ import { faFileLines } from '@fortawesome/free-regular-svg-icons'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { cvUploadService } from '../AIService/CvAndJobPostService';
 
-type UploadViewProps = {
-  onSessionCreated: (newSessionId: string) => void;
-};
+// type ApplicationPageProps = {
+//   onSessionCreated: (newSessionId: string) => void;
+// };
 
-export default function UploadView({ onSessionCreated }: UploadViewProps) {
+export default function ApplicationPage() {
     const [option, setOption] = useState<"upload" | "text">("upload");
     const [cvText, setCvText] = useState("");
     const [jobPostingText, setJobPostingText] = useState("");
@@ -71,7 +72,7 @@ export default function UploadView({ onSessionCreated }: UploadViewProps) {
 
             // Analysis is successful - don't show the result, just mark as completed
             setIsCompleted(true);
-            onSessionCreated(response.sessionId); 
+            // onSessionCreated(response.sessionId); 
             console.log('Analysis completed:', response.sessionId); // Keep for debugging
         } catch (err) {
             setError(err instanceof Error ? err.message : "Der opstod en fejl");
@@ -135,6 +136,7 @@ export default function UploadView({ onSessionCreated }: UploadViewProps) {
     return (
         <div className="mt-4 bg-white p-4 flex flex-col items-center justify-center text-center gap-2 border border-stone-100 rounded-lg h-full w-full">
             <div className="w-full">
+                 <Link to="/" className="btn mt-4">← Back to Home</Link>
                 <section className="my-2 mb-6">
                     <h1 className="font-bold mb-2">Upload dine dokumenter</h1>
                     <p className="text-gray-500 text-xs">Tilføj dit CV og jobopslaget for at få personlige forslag</p>

@@ -1,49 +1,50 @@
 
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Sparkles, Target, TrendingUp } from 'lucide-react';
-import { ideasService } from '../AIService/IdeasService';
 
-type QuestionsViewProps = { sessionId: string | null };
+// type InterviewPageProps = { sessionId: string | null };
 
-export default function QuestionsView({ sessionId }: QuestionsViewProps) {
+export default function InterviewPage() {
     const [motivation, setMotivation] = useState("");
     const [experience, setExperience] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const handleUpdate = async () => {
-        if (!sessionId) return;
-        setLoading(true);
-        setError(null);
-        try {
-            await ideasService.updateIdeas({ sessionId, motivation, experience });
-        } catch (err) {
-            setError("Kunne ikke gemme svar");
-        } finally {
-            setLoading(false);
-        }
+       
+        // setLoading(true);
+        // setError(null);
+        // try {
+        //     await ideasService.updateIdeas({ motivation, experience });
+        // } catch (err) {
+        //     setError("Kunne ikke gemme svar");
+        // } finally {
+        //     setLoading(false);
+        // }
     };
 
     const handleGenerate = async (type: "motivation" | "experience") => {
-        if (!sessionId) return;
-        setLoading(true);
-        setError(null);
-        try {
-            const res = await ideasService.generateIdeas(sessionId, type);
-            // Formater alle ideer som '- idé' med linjeskift
-            const formatted = res.ideas.map(idea => `- ${idea}`).join("\n\n");
-            if (type === "motivation") setMotivation(formatted);
-            if (type === "experience") setExperience(formatted);
-        } catch (err) {
-            setError("Kunne ikke generere idéer");
-        } finally {
-            setLoading(false);
-        }
+       
+        // setLoading(true);
+        // setError(null);
+        // try {
+        //     const res = await ideasService.generateIdeas(type);
+        //     // Formater alle ideer som '- idé' med linjeskift
+        //     const formatted = res.ideas.map(idea => `- ${idea}`).join("\n\n");
+        //     if (type === "motivation") setMotivation(formatted);
+        //     if (type === "experience") setExperience(formatted);
+        // } catch (err) {
+        //     setError("Kunne ikke generere idéer");
+        // } finally {
+        //     setLoading(false);
+        // }
     };
 
     return (
         <div className="mt-4 bg-white p-4 flex flex-col items-center justify-center text-center gap-2 border border-stone-100 rounded-lg h-full w-full">
             <div className="w-full">
+                 <Link to="/" className="btn mt-4">← Back to Home</Link>
                 <section className="my-2 mb-6">
                     <h1 className="font-bold mb-2">Besvar Nøglespørgsmål</h1>
                     <p className="text-gray-500 text-xs">Giv gennemtænkte svar på disse vigtige ansøgningsspørgsmål</p>
