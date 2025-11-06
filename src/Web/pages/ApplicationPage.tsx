@@ -2,9 +2,8 @@ import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { faCopy } from '@fortawesome/free-regular-svg-icons'
 import { faFileLines } from '@fortawesome/free-regular-svg-icons'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import {Copy, Download} from "lucide-react";
 import { cvUploadService } from '../AIService/CvAndJobPostService';
 
 // type ApplicationPageProps = {
@@ -13,9 +12,16 @@ import { cvUploadService } from '../AIService/CvAndJobPostService';
 
 export default function ApplicationPage() {
     const [option, setOption] = useState<"upload" | "text">("upload");
+    const [applicationOutput, setApplicationOutput] = useState<string>("");
+    const [matchOutput, setMatchOutput] = useState<string>("");
+    const [mailOutput, setMailOutput] = useState<string>("");
+
     const [cvText, setCvText] = useState("");
     const [jobPostingText, setJobPostingText] = useState("");
-    const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+
+    const [cvFile, setCvFile] = useState<File | null>(null);
+    const [jobFile, setJobFile] = useState<File | null>(null);
+
     const [isLoading, setIsLoading] = useState(false);
     const [isCompleted, setIsCompleted] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -29,12 +35,12 @@ export default function ApplicationPage() {
             
             if (allowedTypes.includes(file.type)) {
                 console.log('Fil uploadet:', file.name);
-                setUploadedFile(file);
+                setCvFile(file);
                 setError(null);
                 setIsCompleted(false); // Reset completion state
             } else {
                 alert('Kun PDF, DOC og DOCX filer er tilladt');
-                setUploadedFile(null);
+                setCvFile(null);
             }
         }
     };
@@ -44,240 +50,268 @@ export default function ApplicationPage() {
     };
 
     const handleSubmit = async () => {
-        if (!jobPostingText.trim()) {
-            setError("Jobopslag er påkrævet");
-            return;
-        }
+        // if (!jobPostingText.trim()) {
+        //     setError("Jobopslag er påkrævet");
+        //     return;
+        // }
 
-        if (option === "upload" && !uploadedFile) {
-            setError("Upload en CV-fil eller skift til tekst-indput");
-            return;
-        }
+        // if (option === "upload" && !cvFile) {
+        //     setError("Upload en CV-fil eller skift til tekst-indput");
+        //     return;
+        // }
 
-        if (option === "text" && !cvText.trim()) {
-            setError("CV-indhold er påkrævet");
-            return;
-        }
+        // if (option === "text" && !cvText.trim()) {
+        //     setError("CV-indhold er påkrævet");
+        //     return;
+        // }
 
-        setIsLoading(true);
+        // setIsLoading(true);
         setError(null);
-        setIsCompleted(false);
+        setIsCompleted(true);
 
-        try {
-            const response = await cvUploadService.uploadCvAndJobPosting({
-                cvContent: option === "text" ? cvText : undefined,
-                cvFile: option === "upload" ? uploadedFile! : undefined,
-                jobPostingContent: jobPostingText
-            });
+        // try {
+        //     const response = await cvUploadService.uploadCvAndJobPosting({
+        //         cvContent: option === "text" ? cvText : undefined,
+        //         // cvFile: option === "upload" ? cvFile : undefined,
+        //         jobPostingContent: jobPostingText
+        //     });
 
-            // Analysis is successful - don't show the result, just mark as completed
-            setIsCompleted(true);
-            // onSessionCreated(response.sessionId); 
-            console.log('Analysis completed:', response.sessionId); // Keep for debugging
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Der opstod en fejl");
-        } finally {
-            setIsLoading(false);
-        }
+        //     // Analysis is successful - don't show the result, just mark as completed
+        //     setIsCompleted(true);
+        //     // onSessionCreated(response.sessionId); 
+        //     console.log('Analysis completed:', response.sessionId); // Keep for debugging
+        // } catch (err) {
+        //     setError(err instanceof Error ? err.message : "Der opstod en fejl");
+        // } finally {
+        //     setIsLoading(false);
+        // }
     };
 
-    const resetForm = () => {
-        setCvText("");
-        setJobPostingText("");
-        setUploadedFile(null);
-        setError(null);
-        setIsCompleted(false);
-        // setSessionId(null);
-        setOption("upload");
-    };
-
-    // const proceedToNextStep = () => {
-    //     if (sessionId) {
-    //         // TODO: Navigate to next view/step with sessionId
-    //         console.log("Proceeding to step 2 with session ID:", sessionId);
-    //         // Example: navigate('/questions', { state: { sessionId } })
-    //     }
+    // const resetForm = () => {
+    //     setCvText("");
+    //     setJobPostingText("");
+    //     setCvFile(null);
+    //     setError(null);
+    //     setIsCompleted(false);
+    //     // setSessionId(null);
+    //     setOption("upload");
     // };
+    
+    const copyApplicationOutput = () => {
+        if (applicationOutput) {
+            navigator.clipboard.writeText(applicationOutput);
+        }
+    }
 
-    const getButtonContent = () => {
-        if (isLoading) {
-            return (
-                <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
-                    Analyserer dokumenter...
-                </>
-            );
+    const copyMailOutput = () => {
+        if (mailOutput) {
+            navigator.clipboard.writeText(mailOutput);
         }
-        
-        if (isCompleted) {
-            return (
-                <>
-                    <FontAwesomeIcon icon={faCheck} className="mr-2" />
-                    Analyse fuldført
-                </>
-            );
-        }
-        
-        return 'Analyser dokumenter';
-    };
+    }
 
-    const getButtonClass = () => {
-        if (isLoading) {
-            return 'bg-blue-400 text-white cursor-wait';
-        }
-        
-        if (isCompleted) {
-            return 'bg-green-50 border border-green-200 rounded-lg font-semibold text-green-800';
-        }
-        
-        return 'bg-blue-500 text-white hover:bg-blue-600';
-    };
+    const downloadOutput = () => {
+        if (!applicationOutput) return;
+        const blob = new Blob([applicationOutput], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'README.md';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+   
 
     return (
-        <div className="mt-4 bg-white p-4 flex flex-col items-center justify-center text-center gap-2 border border-stone-100 rounded-lg h-full w-full">
-            <div className="w-full">
-                 <Link to="/" className="btn mt-4">← Back to Home</Link>
-                <section className="my-2 mb-6">
-                    <h1 className="font-bold mb-2">Upload dine dokumenter</h1>
-                    <p className="text-gray-500 text-xs">Tilføj dit CV og jobopslaget for at få personlige forslag</p>
-                </section>
-                
-                <section className="flex flex-col bg-white px-4 py-2 text-center gap-2 border border-stone-100 rounded-lg">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <div className="flex items-center gap-1">
-                                <FontAwesomeIcon icon={faFileLines} className="text-blue-500 text-xs" />
-                                <h3 className="text-left font-semibold">CV</h3>
+        <div className="bg-stone-100 p-8 h-full w-full">
+            <div className="w-3/4 flex flex-col items-center justify-center text-center gap-8 mx-auto">
+                 <div className="flex justify-between items-start w-full">
+                    <Link to="/" className="btn">← Hjem</Link>
+                    <section className="flex flex-col items-center">
+                        <h1 className="font-bold mb-2 text-4xl">Generer ansøgning</h1>
+                        <p className="text-gray-500 text-sm">Tilføj dit CV og jobopslaget for at få personlige forslag</p>
+                    </section>
+                    <p></p>
+                </div>                
+
+                <div className="w-full flex flex-col sm:flex-row items-center gap-10">
+                    <section className="w-1/2 flex flex-col bg-white px-4 py-2 text-center gap-2 border border-stone-100 rounded-lg">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <div className="flex items-center gap-1">
+                                    <FontAwesomeIcon icon={faFileLines} className="text-blue-500 text-xs" />
+                                    <h3 className="text-left font-semibold text-md sm:text-xl">CV</h3>
+                                </div>                            
+                                <p className="text-gray-500 text-xs sm:text-sm">Upload eller indsæt dit CV</p>
                             </div>                            
-                            <p className="text-gray-500 text-xs">Upload din CV-fil eller indsæt dit CV-indhold</p>
+                        </div>                        
+                        <div>
+                            <button 
+                                className={`w-full border-2 border-dotted rounded-lg py-6 border-stone-300 flex flex-col gap-2 items-center ${
+                                    isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-sky-50"
+                                }`}
+                                onClick={triggerFileUpload}
+                                disabled={isLoading}
+                            >
+                                <FontAwesomeIcon icon={faArrowUpFromBracket} className="text-2xl text-gray-500"/>
+                                <p className="font-semibold mb-2 text-sm sm:text-md">
+                                    {cvFile ? cvFile.name : "Klik for at uploade CV"}
+                                </p>
+                                <p className="text-gray-500 text-xs sm:text-sm">Understøttede formater: PDF, DOC, DOCX</p>
+                            </button>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept=".pdf,.doc,.docx"
+                                onChange={handleFileUpload}
+                                style={{ display: 'none' }}
+                                disabled={isLoading}
+                            />
+                        </div>                      
+                        
+                        <div>
+                            <textarea 
+                                className={`w-full h-70 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
+                                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                                }`}
+                                placeholder="Indsæt dit CV-indhold"
+                                value={cvText}
+                                onChange={(e) => setCvText(e.target.value)}
+                                disabled={isLoading}
+                            />
+                        </div> 
+                        
+                    </section>
+
+                    <section className="w-1/2 flex flex-col bg-white px-4 py-2 text-center gap-2 border border-stone-100 rounded-lg">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <div className="flex items-center gap-1">
+                                    <FontAwesomeIcon icon={faFileLines} className="text-blue-500 text-xs" />
+                                    <h3 className="text-left font-semibold text-md sm:text-xl">Jobopslag</h3>
+                                </div>                            
+                                <p className="text-gray-500 text-xs sm:text-sm">Upload eller indsæt jobopslag</p>
+                            </div>                            
                         </div>
-                        <div className="flex gap-2">
+                        <div>
                             <button 
-                                onClick={() => setOption("upload")} 
+                                className={`w-full border-2 border-dotted rounded-lg py-6 border-stone-300 flex flex-col gap-2 items-center ${
+                                    isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-sky-50"
+                                }`}
+                                onClick={triggerFileUpload}
                                 disabled={isLoading}
-                                className={`flex items-center gap-2 cursor-pointer border border-stone-100 rounded-lg py-1 px-2 text-xs ${
-                                    option === "upload" ? "bg-blue-500 text-white" : "bg-transparent"
-                                } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-                            > 
-                                <FontAwesomeIcon icon={faArrowUpFromBracket} className={`text-xs ${option === "upload" ? "text-white" : "text-gray-500"}`} />
-                                Upload fil
+                            >
+                                <FontAwesomeIcon icon={faArrowUpFromBracket} className="text-2xl text-gray-500"/>
+                                <p className="font-semibold mb-2 text-sm sm:text-md">
+                                    {jobFile ? jobFile.name : "Klik for at uploade jobopslag"}
+                                </p>
+                                <p className="text-gray-500 text-xs sm:text-sm">Understøttede formater: PDF, DOC, DOCX</p>
                             </button>
-                            <button 
-                                onClick={() => setOption("text")} 
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept=".pdf,.doc,.docx"
+                                onChange={handleFileUpload}
+                                style={{ display: 'none' }}
                                 disabled={isLoading}
-                                className={`flex items-center gap-2 cursor-pointer border border-stone-100 rounded-lg py-1 px-2 text-xs ${
-                                    option === "text" ? "bg-blue-500 text-white" : "bg-transparent"
-                                } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-                            > 
-                                <FontAwesomeIcon icon={faCopy} className={`text-xs ${option === "text" ? "text-white" : "text-gray-600"}`} />
-                                Indsæt tekst
-                            </button>
-                        </div>   
-                    </div>
-                    {option === "upload" ? 
-                    <div>
-                        <button 
-                            className={`w-full border-2 border-dotted rounded-lg py-6 border-stone-300 flex flex-col gap-2 items-center ${
-                                isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-sky-50"
-                            }`}
-                            onClick={triggerFileUpload}
-                            disabled={isLoading}
-                        >
-                            <FontAwesomeIcon icon={faArrowUpFromBracket} className="text-2xl text-gray-500"/>
-                            <p className="font-semibold mb-2 text-sm">
-                                {uploadedFile ? uploadedFile.name : "Klik for at uploade dit CV"}
-                            </p>
-                            <p className="text-gray-500 text-xs">Understøttede formater: PDF, DOC, DOCX</p>
-                        </button>
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept=".pdf,.doc,.docx"
-                            onChange={handleFileUpload}
-                            style={{ display: 'none' }}
-                            disabled={isLoading}
-                        />
-                    </div>
-                    
-                    : 
-                    <div>
-                        <textarea 
-                            className={`w-full h-30 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs resize-none ${
-                                isLoading ? "opacity-50 cursor-not-allowed" : ""
-                            }`}
-                            placeholder="Indsæt dit CV-indhold"
-                            value={cvText}
-                            onChange={(e) => setCvText(e.target.value)}
-                            disabled={isLoading}
-                        />
-                    </div> 
-                    }
-                </section>
+                            />
+                        </div> 
+                        <div className="mt-2">
+                            <textarea 
+                                className={`w-full h-70 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
+                                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                                }`}
+                                placeholder="Indsæt jobbeskrivelsen"
+                                value={jobPostingText}
+                                onChange={(e) => setJobPostingText(e.target.value)}
+                                disabled={isLoading}
+                            />
+                        </div>
+                    </section>
 
-                <section className="mt-4 bg-white px-4 py-2 text-center gap-2 border border-stone-100 rounded-lg">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1">
-                            <FontAwesomeIcon icon={faFileLines} className="text-blue-500 text-xs" />
-                            <h3 className="text-left font-semibold">Jobopslag</h3>
-                        </div>    
-                    </div>
-                    <div className="mt-2">
-                        <textarea 
-                            className={`w-full h-30 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs resize-none ${
-                                isLoading ? "opacity-50 cursor-not-allowed" : ""
-                            }`}
-                            placeholder="Indsæt jobbeskrivelsen"
-                            value={jobPostingText}
-                            onChange={(e) => setJobPostingText(e.target.value)}
-                            disabled={isLoading}
-                        />
-                    </div>
-                </section>
-
+                </div>
+                
+                
                 {error && (
                     <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                         <p className="text-red-600 text-sm">{error}</p>
                     </div>
                 )}
 
-                {/* {isCompleted && (
-                    <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                        <div className="flex items-center justify-center mb-2">
-                            <FontAwesomeIcon icon={faCheck} className="text-green-600 mr-2" />
-                            <h3 className="font-semibold text-green-800">Dokumenter analyseret!</h3>
-                        </div>
-                        <p className="text-sm text-green-700 mb-3">
-                            Dine dokumenter er blevet analyseret og gemt. Du kan nu fortsætte til næste trin.
-                        </p>
-                        <div className="flex gap-2">
-                            <button 
-                                // onClick={proceedToNextStep}
-                                className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600"
-                            >
-                                Fortsæt til motivationsskrivning
-                            </button>
-                            <button 
-                                onClick={resetForm}
-                                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300"
-                            >
-                                Start forfra
-                            </button>
-                        </div>
-                    </div>
-                )} */}
-
                 <div className="mt-6 flex gap-4">
                     <button 
                         onClick={handleSubmit}
-                        disabled={isLoading || isCompleted}
-                        className={`flex-1 py-3 px-4 rounded-lg font-semibold text-sm flex items-center justify-center ${getButtonClass()} ${
-                            isCompleted ? 'cursor-default' : ''
+                        disabled={(!(cvText.trim() || cvFile)) || (!(jobPostingText.trim() || jobFile))}
+                        className={`flex-1 py-3 px-4 rounded-lg font-semibold text-sm flex items-center justify-center 
+                        bg-cyan-700 text-white hover:bg-cyan-800 
+                        ${(!(cvText.trim() || cvFile)) || (!(jobPostingText.trim() || jobFile))
+                            ? "opacity-50 cursor-not-allowed"
+                            : "cursor-pointer"
                         }`}
                     >
-                        {getButtonContent()}
+                        Generer ansøgning
                     </button>
                 </div>
+
+                {isCompleted && (
+                    <div className="flex items-center justify-between gap-10 w-full h-full rounded-lg ">
+                        <section className="flex flex-col items-center rounded-lg w-1/3 h-140 bg-white p-4">
+                        <div className="w-full h-1/2">
+                            <h4 className="text-lg sm:text-2xl font-semibold">Match score</h4>
+                        </div>
+                        <div className="w-full h-1/2 flex flex-col gap-2">
+                            <h4 className="text-lg sm:text-2xl font-semibold">Email udkast</h4>
+                            <textarea 
+                            className={`w-full h-60 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
+                                isLoading ? "opacity-50 cursor-not-allowed" : ""
+                            }`}                                
+                            onChange={(e) => setCvText(e.target.value)}
+                            disabled={isLoading}
+                            />
+                            <button
+                                onClick={copyMailOutput}
+                                className='py-1 px-2 sm:py-2 sm:px-3 bg-[linear-gradient(135deg,hsl(250_50%_96%),hsl(280_50%_98%))] cursor-pointer flex items-center justify-center gap-2 font-semibold text-black text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
+                                <Copy className="h-4 w-4" />
+                                Kopiér
+                            </button>
+                        </div>
+                           
+                        </section>
+                        <section className="flex flex-col gap-2 rounded-lg w-2/3 h-140 bg-white p-4">
+                        <div className="text-left">
+                            <h4 className="text-lg sm:text-2xl font-semibold">Genereret ansøgning</h4>
+                            <p className="text-gray-500 text-xs sm:text-sm">AI-genereret ansøgning baseret på dit CV og jobopslag.</p>
+                        </div>                            
+                        <textarea 
+                            className={`w-full h-110 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
+                                isLoading ? "opacity-50 cursor-not-allowed" : ""
+                            }`}                                
+                            onChange={(e) => setCvText(e.target.value)}
+                            disabled={isLoading}
+                        />
+                         <div className='flex items-center gap-2'>
+                            <button
+                                onClick={copyApplicationOutput}
+                                className='py-1 px-2 sm:py-2 sm:px-3 bg-[linear-gradient(135deg,hsl(250_50%_96%),hsl(280_50%_98%))] cursor-pointer flex items-center gap-2 font-semibold text-black text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
+                                <Copy className="h-4 w-4" />
+                                Kopiér
+                            </button>
+                            <button
+                                onClick={downloadOutput}
+                                className='py-1 px-2 sm:py-2 sm:px-3  bg-[linear-gradient(135deg,hsl(250_50%_96%),hsl(280_50%_98%))] cursor-pointer flex items-center gap-2 font-semibold text-black text-xs sm:text-sm rounded-sm sm:rounded-md 
+                                hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
+                                <Download className="h-4 w-4" />
+                                Download
+                            </button>
+                        </div>
+                        </section>
+                    </div>
+                )}
+
             </div>
+            
         </div>
     );
 }
