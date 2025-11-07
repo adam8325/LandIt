@@ -3,6 +3,10 @@ using DotNetEnv;
 using Application.Interfaces;
 using Infrastructure.Services;
 using Application.Services;
+using Application.Interfaces.IAIService;
+using Application.Interfaces.IFileProcessing;
+using Application.Interfaces.IApplicationService;
+using Application.Services.ApplicationService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +17,9 @@ DotNetEnv.Env.Load("../../.env");
 
 // builder.Services.AddSingleton(new OpenAIClient(apiKey));
 
-builder.Services.AddHttpClient<IOpenAiService, OpenAiService>();
-builder.Services.AddScoped<IFileProcessingService, FileProcessingService>();
-builder.Services.AddScoped<ICvAndJobPostService, CvAndJobPostService>();
-builder.Services.AddScoped<ISessionService, SessionService>();
-builder.Services.AddScoped<IIdeasService, IdeasService>();
+builder.Services.AddHttpClient<IAIService, OpenAiService>();
+builder.Services.AddScoped<IFileProcessing, FileProcessing>();
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddMemoryCache();
 
 

@@ -1,144 +1,101 @@
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.Text.Json;
+using Application.DTOs.ApplicationResponse;
 using Application.Interfaces;
+using Application.Interfaces.IAIService;
+using Infrastructure.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Services
 {
-    public class OpenAiService: IOpenAiService
+    public class OpenAiService : IAIService
     {
         private readonly HttpClient _httpClient;
-        private readonly string _model = "gpt-4.1-mini";
+        private readonly string _apiKey;
 
-        public OpenAiService(HttpClient httpClient)
+        public OpenAiService(HttpClient httpClient, IConfiguration config)
         {
             _httpClient = httpClient;
-
-            var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-                ?? throw new InvalidOperationException("OPENAI_API_KEY not found");
-
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+            _apiKey = config["OpenAI:ApiKey"] ?? throw new ArgumentNullException("OpenAI API key not configured");
         }
 
-        private async Task<string> CallOpenAiAsync(string prompt)
+        public async Task<ApplicationResponse> GenerateApplicationAsync(string cv, string jobPosting)
         {
-            var body = new
+            var prompt = $$"""
+            Du er en dansk jobcoach. Analysér følgende CV og jobopslag:
+            ---
+            CV:
+            {{{cv}}}
+            ---
+            Jobopslag:
+            {{{jobPosting}}}
+
+            Returnér svaret i JSON-format med følgende struktur:
             {
-                model = _model,
+                "matchScore": (et tal mellem 0 og 100),
+                "emailDraft": "kort e-mail",
+                "applicationText": "den fulde ansøgning"
+            }
+            """;
+
+
+            var requestBody = new
+            {
+                model = "gpt-4o-mini",
                 messages = new[]
                 {
-                    new
-                    {
-                        role = "user",
-                        content = prompt
-                    }
-                },
-                max_tokens = 1000,
-                temperature = 0.7
+                    new { role = "user", content = prompt }
+                }
             };
 
-            var response = await _httpClient.PostAsync(
-                "https://api.openai.com/v1/chat/completions",
-                new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
-            );
+            using var requestMessage = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+            requestMessage.Content = JsonContent.Create(requestBody);
 
+            var response = await _httpClient.SendAsync(requestMessage);
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsStringAsync();
-            using var doc = JsonDocument.Parse(json);
+            var jsonResponse = await response.Content.ReadFromJsonAsync<OpenAiResponse>();
+            if (jsonResponse == null)
+                throw new InvalidOperationException("Failed to parse OpenAI response");
 
-            return doc.RootElement
-                .GetProperty("choices")[0]
-                .GetProperty("message")
-                .GetProperty("content")
-                .GetString()!;
+            return ParseResponse(jsonResponse);
         }
 
-        public async Task<string> AnalyzeCvAndJobPostingAsync(string cv, string jobPosting)
+        private ApplicationResponse ParseResponse(OpenAiResponse openAiResponse)
         {
-            var prompt = $@"Analyser følgende CV og jobopslag og giv en kort vurdering:
-            
-                CV:
-                {cv}
+            var content = openAiResponse.Choices.FirstOrDefault()?.Message?.Content;
 
-                Jobopslag:
-                {jobPosting}";
-
-            return await CallOpenAiAsync(prompt);
-        }
-
-        public async Task<List<string>> GenerateIdeasAsync(string cv, string jobPosting, string type)
-        {
-            string prompt;
-            if (type == "motivation")
-            {
-                prompt = $@"Giv tre korte, konkrete forslag til motivation og match til en ansøgning. Brug følgende CV og jobopslag som kontekst. Fjern alle symboler der ikke er nødvendige. Indholdet skal følge denne konvention. Brug den gerne som eksempel.
-
-                ###
-                - Jeg er motiveret af at arbejde med cutting-edge teknologi, der virkelig kan ændre brugeroplevelsen.  
-
-                - At kunne bidrage til et team, hvor mine idéer forventes og værdsættes, inspirerer mig meget.  
-
-                - Muligheden for at udvikle AI-drevne løsninger, der skaber reel værdi for kunderne, fascinerer mig.
-                ###
-
-                CV:
-                {cv}
-
-                Jobopslag:
-                {jobPosting}
-
-                Svar som en JSON-liste med tre citater.";
-            }
-            else // "experience"
-            {
-                prompt = $@"Giv tre korte, konkrete forslag til erfaringer og styrker, der kan bruges i en ansøgning. Brug følgende CV og jobopslag som kontekst.  Fjern alle symboler der ikke er nødvendige. Indholdet skal følge denne konvention. Brug den gerne som eksempel.
-
-                ###
-                - Min erfaring med .NET og React.js fra praktikforløbet vil styrke udviklingen af AI-drevne løsninger, der kræver moderne frontend og backend integration i jeres projekter.
-
-                - Jeg har udviklet Python-biblioteker og automatiseringsscripts, hvilket vil bidrage til effektiv datahåndtering og intelligent procesoptimering i jeres AI-implementeringer.
-
-                - Min viden om SCRUM og agile metoder sikrer, at jeg kan arbejde effektivt i teams og tilpasse mig hurtigt til skiftende krav i jeres innovative udviklingsmiljø.
-                ###
-
-                CV:
-                {cv}
-
-                Jobopslag:
-                {jobPosting}
-
-                Svar som en JSON-liste med tre citater.";
-            }
-
-            var aiResponse = await CallOpenAiAsync(prompt);
-
-            // Fjern markdown og alt udenom selve JSON-listen
-            var cleaned = aiResponse
-                .Replace("```json", "")
-                .Replace("```", "")
-                .Trim();
-
-            // Prøv at finde første og sidste kantede parentes (array)
-            int start = cleaned.IndexOf('[');
-            int end = cleaned.LastIndexOf(']');
-            if (start != -1 && end != -1 && end > start)
-            {
-                cleaned = cleaned.Substring(start, end - start + 1);
-            }
+            if (string.IsNullOrWhiteSpace(content))
+                throw new InvalidOperationException("No content returned from OpenAI");
 
             try
             {
-                var ideas = JsonSerializer.Deserialize<List<string>>(cleaned);
-                if (ideas != null)
-                    return ideas;
-            }
-            catch { }
-            // Hvis alt fejler, returnér hele svaret som én idé
-            return new List<string> { aiResponse };
-        }
+                // Expect the model to return valid JSON
+                var parsed = JsonSerializer.Deserialize<ApplicationResponse>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
 
-        public Task<string> GenerateApplicationAsync(string cv, string jobPosting, string motivation, string style)
-            => throw new NotImplementedException();
+                if (parsed == null)
+                    throw new InvalidOperationException("Could not parse response into ApplicationResponse");
+
+                return parsed;
+            }
+            catch
+            {
+                // Fallback in case AI returned plain text instead of JSON
+                return new ApplicationResponse
+                {
+                    ApplicationText = content,
+                    EmailDraft = "Kunne ikke parse JSON – tjek model-output",
+                    MatchScore = 0
+                };
+            }
+        }
     }
 }

@@ -1,25 +1,40 @@
-using Application.Interfaces;
-using Application.Services;
+using Application.Interfaces.IApplicationService;
+using Application.Interfaces.IAIService;
+using Application.DTOs.ApplicationResponse;
+using Application.DTOs.ApplicationRequest;
+using Application.Interfaces.IFileProcessing;
+using Microsoft.AspNetCore.Http;
 
-namespace Application.Services
+namespace Application.Services.ApplicationService
 {
-    public class ApplicationService
+    public class ApplicationService : IApplicationService
     {
-        private readonly IOpenAiService _openAiService;
+        private readonly IFileProcessing _fileProcessing;
+        private readonly IAIService _aiService;
 
-        public ApplicationService(IOpenAiService openAiService)
+        public ApplicationService(IFileProcessing fileProcessing, IAIService aiService)
         {
-            _openAiService = openAiService;
+            _fileProcessing = fileProcessing;
+            _aiService = aiService;
         }
 
-        public Task<string> GenerateApplicationAsync(string cv, string jobPosting, string motivation, string style)
+        public async Task<ApplicationResponse> ExecuteAsync(ApplicationRequest request)
         {
-            throw new NotImplementedException();
+            var cvText = await GetTextAsync(request.CvText, request.CvFile);
+            var jobText = await GetTextAsync(request.JobPostingText, request.JobPostingFile);
+
+            return await _aiService.GenerateApplicationAsync(cvText, jobText);
         }
 
-        public async Task<string> GenerateTemplateAsync(string cv, string jobPosting, string motivation, string style)
+        private async Task<string> GetTextAsync(string? text, IFormFile? file)
         {
-            return await _openAiService.GenerateApplicationAsync(cv, jobPosting, motivation, style);
+            if (!string.IsNullOrWhiteSpace(text))
+                return text;
+
+            if (file != null)
+                return await _fileProcessing.ExtractTextAsync(file);
+
+            throw new ArgumentException("Either text or file input must be provided.");
         }
     }
 }

@@ -1,0 +1,27 @@
+using Application.DTOs.ApplicationRequest;
+using Application.Interfaces.IApplicationService;
+using Application.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ApplicationController : ControllerBase
+    {
+        private readonly IApplicationService _applicationService;
+
+        public ApplicationController(IApplicationService applicationService)
+        {
+            _applicationService = applicationService;
+        }
+
+        [HttpPost("application")]
+        public async Task<IActionResult> Generate([FromForm] ApplicationRequest request)
+        {
+            var result = await _applicationService.ExecuteAsync(request);
+            return Ok(result);
+        }
+    }
+
+}
