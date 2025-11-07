@@ -12,11 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load("../../.env");
 
-// var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-//     ?? throw new InvalidOperationException("OPENAI_API_KEY not found");
+var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+    ?? throw new InvalidOperationException("OPENAI_API_KEY not found");
 
-// builder.Services.AddSingleton(new OpenAIClient(apiKey));
+builder.Services.AddSingleton(new OpenAIClient(apiKey));
 
+builder.Configuration["OpenAI:ApiKey"] = apiKey; // <-- tilføj denne linje
 builder.Services.AddHttpClient<IAIService, OpenAiService>();
 builder.Services.AddScoped<IFileProcessing, FileProcessing>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();

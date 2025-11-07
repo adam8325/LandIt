@@ -4,9 +4,8 @@
     import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
     import { faFileLines } from '@fortawesome/free-regular-svg-icons'
     import {Copy, Download} from "lucide-react";
-    import { cvUploadService } from '../AIService/CvAndJobPostService';
+    import {applicationService} from "../AIService/ApplicationService";
 
-    // type ApplicationPageProps = {
     //   onSessionCreated: (newSessionId: string) => void;
     // };
 
@@ -50,52 +49,29 @@
         };
 
         const handleSubmit = async () => {
-            // if (!jobPostingText.trim()) {
-            //     setError("Jobopslag er påkrævet");
-            //     return;
-            // }
+            try {
+                setIsLoading(true);
+                setError(null);
 
-            // if (option === "upload" && !cvFile) {
-            //     setError("Upload en CV-fil eller skift til tekst-indput");
-            //     return;
-            // }
-
-            // if (option === "text" && !cvText.trim()) {
-            //     setError("CV-indhold er påkrævet");
-            //     return;
-            // }
-
-            // setIsLoading(true);
-            setError(null);
-            setIsCompleted(true);
-
-            // try {
-            //     const response = await cvUploadService.uploadCvAndJobPosting({
-            //         cvContent: option === "text" ? cvText : undefined,
-            //         // cvFile: option === "upload" ? cvFile : undefined,
-            //         jobPostingContent: jobPostingText
-            //     });
-
-            //     // Analysis is successful - don't show the result, just mark as completed
-            //     setIsCompleted(true);
-            //     // onSessionCreated(response.sessionId); 
-            //     console.log('Analysis completed:', response.sessionId); // Keep for debugging
-            // } catch (err) {
-            //     setError(err instanceof Error ? err.message : "Der opstod en fejl");
-            // } finally {
-            //     setIsLoading(false);
-            // }
+                const response = await applicationService.generateApplication({
+                cvText: option === "text" ? cvText : undefined,
+                cvFile: option === "upload" ? cvFile : undefined,
+                jobPostingText,
+                jobPostingFile: jobFile ?? undefined,
+                });
+                console.log('AI Response:', response);
+                setApplicationOutput(response.applicationText);
+                setMailOutput(response.emailDraft);
+                setMatchOutput(response.matchScore.toString());
+                setIsCompleted(true);
+            } catch (err) {
+                setError("Der opstod en fejl under generering af ansøgning");
+                console.error(err);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
-        // const resetForm = () => {
-        //     setCvText("");
-        //     setJobPostingText("");
-        //     setCvFile(null);
-        //     setError(null);
-        //     setIsCompleted(false);
-        //     // setSessionId(null);
-        //     setOption("upload");
-        // };
         
         const copyApplicationOutput = () => {
             if (applicationOutput) {
@@ -260,13 +236,15 @@
                             <section className="flex flex-col items-center rounded-lg w-1/3 h-140 bg-white p-4">
                             <div className="w-full h-1/2">
                                 <h4 className="text-lg sm:text-2xl font-semibold">Match score</h4>
+                                <p>{matchOutput}</p>
                             </div>
                             <div className="w-full h-1/2 flex flex-col gap-2">
                                 <h4 className="text-lg sm:text-2xl font-semibold">Email udkast</h4>
                                 <textarea 
                                 className={`w-full h-60 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
                                     isLoading ? "opacity-50 cursor-not-allowed" : ""
-                                }`}                                
+                                }`}                        
+                                value={mailOutput}        
                                 onChange={(e) => setCvText(e.target.value)}
                                 disabled={isLoading}
                                 />
@@ -287,7 +265,8 @@
                             <textarea 
                                 className={`w-full h-110 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
                                     isLoading ? "opacity-50 cursor-not-allowed" : ""
-                                }`}                                
+                                }`}             
+                                value={applicationOutput}
                                 onChange={(e) => setCvText(e.target.value)}
                                 disabled={isLoading}
                             />

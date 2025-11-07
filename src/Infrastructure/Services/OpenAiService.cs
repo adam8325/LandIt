@@ -26,7 +26,7 @@ namespace Infrastructure.Services
         public async Task<ApplicationResponse> GenerateApplicationAsync(string cv, string jobPosting)
         {
             var prompt = $$"""
-            Du er en dansk jobcoach. Analysér følgende CV og jobopslag:
+            Du er en dansk, professionel jobcoach med stor erfaring i CV og jobansøgninger, og du ved, hvordan man skriver en effektiv ansøgning, og hvad jobmarkedet efterspørger. Analysér følgende CV og jobopslag:
             ---
             CV:
             {{{cv}}}
@@ -34,10 +34,11 @@ namespace Infrastructure.Services
             Jobopslag:
             {{{jobPosting}}}
 
-            Returnér svaret i JSON-format med følgende struktur:
+            Returnér kun gyldig JSON uden ``` eller markdown-formatering.
+            Returnér svaret udelukkende i JSON-format med følgende struktur:
             {
-                "matchScore": (et tal mellem 0 og 100),
-                "emailDraft": "kort e-mail",
+                "matchScore": (et tal mellem 0 og 100), der angiver, hvor godt ansøgningen matcher jobopslaget,
+                "emailDraft": "kort e-mail der fanger essensen af ansøgningen og jobopslaget. Du vækker modtagerens interesse og opfordrer til at læse den fulde ansøgning.",
                 "applicationText": "den fulde ansøgning"
             }
             """;
@@ -73,6 +74,8 @@ namespace Infrastructure.Services
             if (string.IsNullOrWhiteSpace(content))
                 throw new InvalidOperationException("No content returned from OpenAI");
 
+            content = CleanJsonString(content); 
+
             try
             {
                 // Expect the model to return valid JSON
@@ -97,5 +100,25 @@ namespace Infrastructure.Services
                 };
             }
         }
+
+        private static string CleanJsonString(string content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+                return content;
+
+            // Fjern markdown-kodeblokke
+            content = content.Replace("```json", "", StringComparison.OrdinalIgnoreCase)
+                            .Replace("```", "");
+
+            // Trim mellemrum og linjeskift
+            content = content.Trim();
+
+            // Fjern evt. uønskede escape-tegn
+            if (content.StartsWith("\"") && content.EndsWith("\""))
+                content = content.Trim('"');
+
+            return content;
+        }
+
     }
 }
