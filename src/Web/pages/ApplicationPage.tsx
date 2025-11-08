@@ -3,7 +3,7 @@
     import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
     import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
     import { faFileLines } from '@fortawesome/free-regular-svg-icons'
-    import {Copy, Download} from "lucide-react";
+    import {Copy, Download, Check, Loader2, X} from "lucide-react";
     import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
     import {applicationService} from "../AIService/ApplicationService";
 
@@ -23,8 +23,10 @@
         const [jobPostingText, setJobPostingText] = useState("");
         const [jobFile, setJobFile] = useState<File | null>(null);
 
-        const [isLoading, setIsLoading] = useState(false);
-        const [isCompleted, setIsCompleted] = useState(false);
+        const [isLoading, setIsLoading] = useState<boolean>(false);
+        const [isMailCopied, setIsMailCopied] = useState<boolean>(false);
+        const [isApplicationCopied, setIsApplicationCopied] = useState<boolean>(false);
+        const [isCompleted, setIsCompleted] = useState<boolean>(false);
         const [error, setError] = useState<string | null>(null);
 
         const cvInputRef = useRef<HTMLInputElement>(null);
@@ -34,6 +36,9 @@
             try {
                 setIsLoading(true);
                 setError(null);
+                setIsMailCopied(false);
+                setIsApplicationCopied(false);
+                setIsCompleted(false);
 
                 const response = await applicationService.generateApplication({
                 cvText: option === "text" ? cvText : undefined,
@@ -106,12 +111,14 @@
 
         const copyApplicationOutput = () => {
             if (applicationOutput) {
+                setIsApplicationCopied(true);
                 navigator.clipboard.writeText(applicationOutput);
             }
         }
 
         const copyMailOutput = () => {
             if (mailOutput) {
+                setIsMailCopied(true);
                 navigator.clipboard.writeText(mailOutput);
             }
         }
@@ -132,19 +139,25 @@
     
 
         return (
-            <div className="bg-stone-100 p-8 h-full w-full">
-                <div className="w-3/4 flex flex-col items-center justify-center text-center gap-8 mx-auto">
-                    <div className="flex justify-between items-start w-full">
-                        <Link to="/" className="btn">← Hjem</Link>
-                        <section className="flex flex-col items-center">
-                            <h1 className="font-bold mb-2 text-4xl">Generer ansøgning</h1>
-                            <p className="text-gray-500 text-sm">Tilføj dit CV og jobopslaget for at generere en professionel ansøgning</p>
+            <div className="bg-slate-950 p-8 h-full w-full">
+                <div className="w-3/4 flex flex-col items-center justify-center text-center text-white gap-10 mx-auto">
+                    <div className="flex justify-between items-center w-full">
+                        <Link to="/" className="btn py-1 px-2 rounded-lg font-semibold text-xs flex items-center justify-center gap-2
+                            hover:border hover:border-blue-400 hover:bg-sky-900 transition-colors">
+                               <span className="text-white">Hjem</span> 
+                        </Link>
+                        <section className="flex flex-col items-center justify-center">
+                            <h1 className="font-bold mb-2 text-4xl pb-1 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
+                                Generér ansøgning
+                            </h1>
+
+                            <p className="text-gray-300 text-sm">Tilføj dit CV og jobopslaget for at generere en professionel ansøgning</p>
                         </section>
                         <p></p>
                     </div>                
 
                     <div className="w-full flex flex-col sm:flex-row items-center gap-10">
-                        <section className="w-1/2 flex flex-col bg-white px-4 py-2 text-center gap-2 border border-stone-100 rounded-lg">
+                        <section className="w-1/2 flex flex-col bg-slate-900 px-4 py-2 text-center gap-2 rounded-lg">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="flex items-center gap-1">
@@ -156,8 +169,8 @@
                             </div>                        
                             <div>
                                 <button 
-                                    className={`w-full border-2 border-dotted rounded-lg py-6 border-stone-300 flex flex-col gap-2 items-center ${
-                                        isLoading || cvText !== "" ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-sky-50"
+                                    className={`w-full border-1 border-dashed rounded-lg py-6 border-gray-700 flex flex-col gap-2 items-center ${
+                                        isLoading || cvText !== "" ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:border-sky-700"
                                     }`}
                                     onClick={triggerCvFileUpload}
                                     disabled={isLoading || cvText !== ""}
@@ -168,7 +181,9 @@
                                     </p>
                                     <div className="p-2 flex items-center justify-center gap-2">
                                         <p className="text-gray-500 text-xs sm:text-sm">{ cvFile ? cvFile.name : "Understøttede formater: PDF, DOC, DOCX"}</p>
-                                        {cvFile && <button onClick={(e) => {e.stopPropagation(); removeCvFile()}} className="text-red-400 cursor-pointer bg-red-100 rounded-md px-2">x</button>}
+                                        {cvFile && <button onClick={(e) => {e.stopPropagation(); removeCvFile()}} className="text-white cursor-pointer bg-gray-500 rounded-full w-5 h-5 flex items-center justify-center">
+                                            <X className="w-3 h-3" />
+                                        </button>}
                                     </div>
                                     
                                 </button>
@@ -190,7 +205,7 @@
                             
                             <div>
                                 <textarea 
-                                    className={`w-full h-70 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
+                                    className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
                                         isLoading || cvFile !== null ? "opacity-50 cursor-not-allowed" : ""
                                     }`}
                                     placeholder="Indsæt dit CV-indhold"
@@ -202,7 +217,7 @@
                             
                         </section>
 
-                        <section className="w-1/2 flex flex-col bg-white px-4 py-2 text-center gap-2 border border-stone-100 rounded-lg">
+                        <section className="w-1/2 flex flex-col bg-slate-900 px-4 py-2 text-center gap-2 rounded-lg">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="flex items-center gap-1">
@@ -214,8 +229,8 @@
                             </div>
                             <div>
                                 <button 
-                                    className={`w-full border-2 border-dotted rounded-lg py-6 border-stone-300 flex flex-col gap-2 items-center ${
-                                        isLoading || jobPostingText !== "" ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-sky-50"
+                                    className={`w-full border-1 border-dashed rounded-lg py-6 border-gray-700 flex flex-col gap-2 items-center ${
+                                        isLoading || jobPostingText !== "" ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:border-sky-700"
                                     }`}
                                     onClick={triggerJobFileUpload}
                                     disabled={isLoading || jobPostingText !== ""}
@@ -226,7 +241,9 @@
                                     </p>
                                     <div className="p-2 flex items-center justify-center gap-2">
                                         <p className="text-gray-500 text-xs sm:text-sm">{ jobFile ? jobFile.name : "Understøttede formater: PDF, DOC, DOCX"}</p>
-                                        {jobFile && <button onClick={(e) => {e.stopPropagation(); removeJobFile()}} className="text-red-400 cursor-pointer bg-red-100 rounded-md px-2">x</button>}
+                                        {jobFile && <button onClick={(e) => {e.stopPropagation(); removeJobFile()}} className="text-white cursor-pointer bg-gray-500 rounded-full w-5 h-5 flex items-center justify-center">
+                                            <X className="w-3 h-3" />
+                                        </button>}
                                     </div>
                                 </button>
                                 <input
@@ -247,7 +264,7 @@
 
                             <div>
                                 <textarea 
-                                    className={`w-full h-70 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
+                                    className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
                                         isLoading || jobFile !== null ? "opacity-50 cursor-not-allowed" : ""
                                     }`}
                                     placeholder="Indsæt jobbeskrivelsen"
@@ -271,20 +288,26 @@
                         <button 
                             onClick={handleSubmit}
                             disabled={(!(cvText.trim() || cvFile)) || (!(jobPostingText.trim() || jobFile))}
-                            className={`flex-1 py-3 px-4 rounded-lg font-semibold text-sm flex items-center justify-center 
-                            bg-cyan-700 text-white hover:bg-cyan-800 
+                            className={`group flex-1 py-3 px-4 rounded-lg font-semibold text-sm flex items-center justify-center gap-2
+                            border border-blue-400 bg-sky-100 hover:bg-sky-900 transition-colors
                             ${(!(cvText.trim() || cvFile)) || (!(jobPostingText.trim() || jobFile))
                                 ? "opacity-50 cursor-not-allowed"
                                 : "cursor-pointer"
                             }`}
                         >
-                            Generer ansøgning
+                            {isLoading && <Loader2 className="animate-spin h-5 w-5 text-blue-700" />}
+                            {isCompleted && !isLoading && <Check className="h-4 w-4 text-blue-500" />}
+
+                             <span className="bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 bg-clip-text text-transparent text-shadow-md/10 group-hover:text-white">
+                                {isCompleted ? "Færdig!" : "Generér ansøgning"}
+                            </span>
+                            
                         </button>
                     </div>
 
                     {isCompleted && (
                         <div className="flex items-center justify-between gap-10 w-full h-full rounded-lg ">
-                            <section className="flex flex-col items-center rounded-lg w-1/3 h-140 bg-white p-4">
+                            <section className="flex flex-col items-center rounded-lg w-1/3 h-140 bg-slate-900 p-4">
                             <div className="w-full h-2/5 flex flex-col items-center gap-8">
                                 <h4 className="text-lg sm:text-2xl font-semibold">Match score</h4>
                                 <div className="w-30 h-30 relative">
@@ -292,20 +315,20 @@
                                     value={matchOutput}
                                     styles={buildStyles({
                                         pathColor: `rgba(6, 182, 212, ${matchOutput / 100})`,
-                                        textColor: '#6b7280',
+                                        textColor: '#5479c2ff',
                                         trailColor: '#f1f5f9',                                         
                                     })}
                                 />
-                                   <div className="absolute inset-0 flex items-center justify-center text-black font-semibold">
+                                   <div className="absolute inset-0 flex items-center justify-center text-white font-semibold">
                                         {matchOutput}%
                                     </div>
                                 </div>
                                 
                             </div>
-                            <div className="w-full h-3/5 flex flex-col gap-2">
+                            <div className="w-full h-3/5 flex flex-col gap-4">
                                 <h4 className="text-lg sm:text-2xl font-semibold">Email udkast</h4>
                                 <textarea 
-                                className={`w-full h-70 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
+                                className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
                                     isLoading ? "opacity-50 cursor-not-allowed" : ""
                                 }`}                        
                                 value={mailOutput}        
@@ -314,19 +337,19 @@
                                 />
                                 <button
                                     onClick={copyMailOutput}
-                                    className='py-1 px-2 sm:py-2 sm:px-3 bg-[linear-gradient(135deg,hsl(250_50%_96%),hsl(280_50%_98%))] cursor-pointer flex items-center justify-center gap-2 font-semibold text-black text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
-                                    <Copy className="h-4 w-4" />
-                                    Kopiér
+                                    className='py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center justify-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
+                                    {isMailCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                                    {isMailCopied ? "Kopieret" : "Kopiér"}
                                 </button>
                             </div>
                             
                             </section>
-                            <section className="flex flex-col gap-2 rounded-lg w-2/3 h-140 bg-white p-4">
+                            <section className="flex flex-col gap-4 rounded-lg w-2/3 h-140 bg-slate-900 p-4">
                             <div className="text-left">
                                 <h4 className="text-lg sm:text-2xl font-semibold">Genereret ansøgning</h4>
                             </div>                            
                             <textarea 
-                                className={`w-full h-110 p-2 border border-stone-300 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
+                                className={`w-full h-110 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
                                     isLoading ? "opacity-50 cursor-not-allowed" : ""
                                 }`}             
                                 value={applicationOutput}
@@ -336,13 +359,13 @@
                             <div className='flex items-center gap-2'>
                                 <button
                                     onClick={copyApplicationOutput}
-                                    className='py-1 px-2 sm:py-2 sm:px-3 bg-[linear-gradient(135deg,hsl(250_50%_96%),hsl(280_50%_98%))] cursor-pointer flex items-center gap-2 font-semibold text-black text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
-                                    <Copy className="h-4 w-4" />
-                                    Kopiér
+                                    className='py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
+                                    {isApplicationCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                                    {isApplicationCopied ? "Kopieret" : "Kopiér"}
                                 </button>
                                 <button
                                     onClick={downloadOutput}
-                                    className='py-1 px-2 sm:py-2 sm:px-3  bg-[linear-gradient(135deg,hsl(250_50%_96%),hsl(280_50%_98%))] cursor-pointer flex items-center gap-2 font-semibold text-black text-xs sm:text-sm rounded-sm sm:rounded-md 
+                                    className='py-1 px-2 sm:py-2 sm:px-3  bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md 
                                     hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
                                     <Download className="h-4 w-4" />
                                     Download

@@ -14,32 +14,24 @@ export default function HomePage() {
 
       <div className="flex justify-between items-center gap-10">        
         <Link to="/application" className="group">
-          <div className="p-4 w-64 h-50 rounded-2xl shadow-md bg-white flex flex-col items-center justify-evenly text-xl font-semibold transition-all duration-200 group-hover:shadow-lg group-hover:scale-105 border-3 hover:border-blue-800">
-            <div className="w-full flex items-center gap-5">
+          <div className="p-4 w-64 h-50 rounded-xl shadow-md bg-gray-900 flex flex-col items-center justify-evenly text-xl font-semibold transition-all duration-200 group-hover:shadow-lg group-hover:scale-105 border-1 hover:border-blue-500">
+            <div className="w-full flex items-center justify-between">
               <Rocket className="text-blue-500 w-6 h-6" />
-              <h4 className="text-lg">Til Ansøgningen</h4>
+              <h4 className="text-lg text-white">Ansøgningen</h4>
+              <p></p>
             </div>        
-            <p className="text-gray-500 text-[16px] text-center">Få en professionel ansøgning og e-mail-udkast - med værdifuld indsigt i, hvor godt du matcher jobbet.</p>
+            <p className="text-gray-300 text-[16px] text-center">Få en professionel ansøgning og e-mail-udkast - med værdifuld indsigt i, hvor godt du matcher jobbet.</p>
           </div>
         </Link>
 
-        {/* <Link to="/elevator" className="group">
-          <div className="p-4 w-64 h-50 rounded-2xl shadow-md bg-white flex flex-col items-center justify-evenly text-xl font-semibold transition-all duration-200 group-hover:shadow-lg group-hover:scale-105 border-3 hover:border-blue-800">
-            <div className="w-full flex items-center gap-5">
-              
-              <h4 className="text-lg">Elevator Pitch</h4>
-            </div>     
-            <p className="text-gray-500 text-[16px] text-center">Generer en kort, kraftfuld personlig præsentation</p>
-          </div>
-        </Link> */}
-
         <Link to="/interview" className="group">
-          <div className="p-4 w-64 h-50 rounded-2xl shadow-md bg-white flex flex-col items-center justify-evenly text-xl font-semibold transition-all duration-200 group-hover:shadow-lg group-hover:scale-105 border-3 hover:border-blue-800">
-            <div className="w-full flex items-center gap-5">
+          <div className="p-4 w-64 h-50 rounded-xl shadow-md bg-gray-900 flex flex-col items-center justify-evenly text-xl font-semibold transition-all duration-200 group-hover:shadow-lg group-hover:scale-105 border-1 hover:border-blue-500">
+            <div className="w-full flex items-center justify-between">
               <Zap className="text-blue-500 w-6 h-6" />
-              <h4 className="text-lg">Til Samtalen</h4>
+              <h4 className="text-lg text-white">Samtalen</h4>
+              <p></p>
             </div>
-            <p className="text-gray-500 text-[16px] text-center">Få en skræddersyet elevator-pitch og lønberegner og øv dig på realistiske interviewspørgsmål med AI</p>
+            <p className="text-gray-300 text-[16px] text-center">Øv dig på realistiske interviewspørgsmål, få en skræddersyet elevator-pitch og tjek din forventede løn.</p>
           </div>
         </Link>
       </div>      
