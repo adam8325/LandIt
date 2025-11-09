@@ -6,6 +6,7 @@
     import {Copy, Download, Check, Loader2, X} from "lucide-react";
     import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
     import {applicationService} from "../AIService/ApplicationService";
+    import { scrollbarStyle } from "../components/ScrollbarStyle";
 
     //   onSessionCreated: (newSessionId: string) => void;
     // };
@@ -205,7 +206,8 @@
                             
                             <div>
                                 <textarea 
-                                    className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
+                                    className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none 
+                                    ${scrollbarStyle} ${
                                         isLoading || cvFile !== null ? "opacity-50 cursor-not-allowed" : ""
                                     }`}
                                     placeholder="Indsæt dit CV-indhold"
@@ -264,7 +266,8 @@
 
                             <div>
                                 <textarea 
-                                    className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
+                                    className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none 
+                                    ${scrollbarStyle} ${
                                         isLoading || jobFile !== null ? "opacity-50 cursor-not-allowed" : ""
                                     }`}
                                     placeholder="Indsæt jobbeskrivelsen"
@@ -287,10 +290,10 @@
                     <div className="mt-6 flex gap-4">
                         <button 
                             onClick={handleSubmit}
-                            disabled={(!(cvText.trim() || cvFile)) || (!(jobPostingText.trim() || jobFile))}
+                            disabled={(!(cvText.trim() || cvFile)) || (!(jobPostingText.trim() || jobFile)) || isLoading}
                             className={`group flex-1 py-3 px-4 rounded-lg font-semibold text-sm flex items-center justify-center gap-2
                             border border-blue-400 bg-sky-100 hover:bg-sky-900 transition-colors
-                            ${(!(cvText.trim() || cvFile)) || (!(jobPostingText.trim() || jobFile))
+                            ${(!(cvText.trim() || cvFile)) || (!(jobPostingText.trim() || jobFile)) || isLoading
                                 ? "opacity-50 cursor-not-allowed"
                                 : "cursor-pointer"
                             }`}
@@ -328,7 +331,8 @@
                             <div className="w-full h-3/5 flex flex-col gap-4">
                                 <h4 className="text-lg sm:text-2xl font-semibold">Email udkast</h4>
                                 <textarea 
-                                className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
+                                className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400  placeholder:text-xs sm:placeholder:text-sm resize-none 
+                                ${scrollbarStyle} ${
                                     isLoading ? "opacity-50 cursor-not-allowed" : ""
                                 }`}                        
                                 value={mailOutput}        
@@ -349,7 +353,8 @@
                                 <h4 className="text-lg sm:text-2xl font-semibold">Genereret ansøgning</h4>
                             </div>                            
                             <textarea 
-                                className={`w-full h-110 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none ${
+                                className={`w-full h-110 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none 
+                                ${scrollbarStyle} ${
                                     isLoading ? "opacity-50 cursor-not-allowed" : ""
                                 }`}             
                                 value={applicationOutput}
