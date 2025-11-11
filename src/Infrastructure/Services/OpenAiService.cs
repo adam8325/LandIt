@@ -24,15 +24,15 @@ namespace Infrastructure.Services
             _apiKey = config["OpenAI:ApiKey"] ?? throw new ArgumentNullException("OpenAI API key not configured");
         }
 
-        public async Task<OverallInterviewDto> GenerateInterviewQuestionsAsync(string prompt)
+        public async Task<InterviewOutputDto> GenerateInterviewQuestionsAsync(string prompt)
         {
             var response = await CallOpenAiAsync(prompt);
             var content = response.Choices.FirstOrDefault()?.Message?.Content ?? "";
 
-            var parsed = JsonSerializer.Deserialize<OverallInterviewDto>(CleanJsonString(content), new JsonSerializerOptions
+            var parsed = JsonSerializer.Deserialize<InterviewOutputDto>(CleanJsonString(content), new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
-            }) ?? new OverallInterviewDto();
+            }) ?? new InterviewOutputDto();
 
             return parsed;
         }

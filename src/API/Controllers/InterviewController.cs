@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces.IInterviewService;
+using Application.DTOs.InterviewRequestDto;
 
 namespace WebAPI.Controllers
 {
@@ -17,20 +18,20 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("start")]
-        public async Task<IActionResult> StartInterview([FromForm] string? cvText, IFormFile? cvFile, [FromForm] string? jobText, IFormFile? jobFile)
+        public async Task<IActionResult> StartInterview([FromForm] InterviewRequestDto interviewRequestDto)
         {
-            var result = await _interviewService.StartInterviewAsync(cvText, cvFile, jobText, jobFile);
+            var result = await _interviewService.StartInterviewAsync(interviewRequestDto);
             return Ok(result);
         }
 
-        [HttpPost("evaluate")]
-        public async Task<IActionResult> EvaluateInterview([FromBody] List<InterviewAnswerDto> responses)
-        {
-            var result = await _interviewService.EvaluateInterviewAsync(
-                responses.Select(r => (r.Question, r.Answer)).ToList()
-            );
-            return Ok(result);
-        }
+        // [HttpPost("evaluate")]
+        // public async Task<IActionResult> EvaluateInterview([FromBody] List<InterviewAnswerDto> responses)
+        // {
+        //     var result = await _interviewService.EvaluateInterviewAsync(
+        //         responses.Select(r => (r.Question, r.Answer)).ToList()
+        //     );
+        //     return Ok(result);
+        // }
     }
 
 }

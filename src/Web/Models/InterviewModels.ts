@@ -4,3 +4,10 @@ export interface InterviewRequest {
   cvFile?: File | null;
   jobPostingFile?: File | null;
 }
+
+export interface InterviewOutput {
+  introduction: string;
+  questions: string[];
+  elevatorPitch: string;
+  salaryEstimate: string;
+}

@@ -4,17 +4,18 @@
     import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
     import { faFileLines } from '@fortawesome/free-regular-svg-icons'
     import {Copy, Download, Check, Loader2, X} from "lucide-react";
-    import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-    import {generateQuestions} from "../AIService/InterviewService";
+    import {interviewService} from "../AIService/InterviewService";
     import { scrollbarStyle } from "../components/ScrollbarStyle";
+
 
 
     export default function InterviewPage() {
 
         const [option, setOption] = useState<"upload" | "text">("upload");
-        const [applicationOutput, setApplicationOutput] = useState<string>("");
-        const [matchOutput, setMatchOutput] = useState<number>(0);
-        const [mailOutput, setMailOutput] = useState<string>("");
+        const [questionsOutput, setQuestionsOutput] = useState<Array<string>>([]);
+        const [salaryOutput, setSalaryOutput] = useState<string>("");
+        const [elevatorOutput, setElevatorOutput] = useState<string>("");
+        const [introductionOutput, setIntroductionOutput] = useState<string>("");
 
         const [cvText, setCvText] = useState("");
         const [cvFile, setCvFile] = useState<File | null>(null);
@@ -23,8 +24,8 @@
         const [jobFile, setJobFile] = useState<File | null>(null);
 
         const [isLoading, setIsLoading] = useState<boolean>(false);
-        const [isMailCopied, setIsMailCopied] = useState<boolean>(false);
-        const [isApplicationCopied, setIsApplicationCopied] = useState<boolean>(false);
+        const [isElevatorCopied, setIsElevatorCopied] = useState<boolean>(false);
+        const [isInterviewCopied, setIsInterviewCopied] = useState<boolean>(false);
         const [isCompleted, setIsCompleted] = useState<boolean>(false);
         const [error, setError] = useState<string | null>(null);
 
@@ -35,20 +36,22 @@
             try {
                 setIsLoading(true);
                 setError(null);
-                setIsMailCopied(false);
-                setIsApplicationCopied(false);
+                setIsElevatorCopied(false);
+                setIsInterviewCopied(false);
                 setIsCompleted(false);
 
-                const response = await generateQuestions({
+                const response = await interviewService.generateQuestions({
                 cvText: option === "text" ? cvText : undefined,
                 cvFile: option === "upload" ? cvFile : undefined,
                 jobPostingText,
                 jobPostingFile: jobFile ?? undefined,
                 });
-                console.log('AI Response:', response);
-                setApplicationOutput(response.applicationText);
-                setMailOutput(response.emailDraft);
-                setMatchOutput(response.matchScore);
+                console.log('Interview Response:', response);
+                
+                setQuestionsOutput(response.questions);
+                setIntroductionOutput(response.introduction);
+                setElevatorOutput(response.elevatorPitch);
+                setSalaryOutput(response.salaryEstimate);
                 setIsCompleted(true);
             } catch (err) {
                 setError("Der opstod en fejl under generering af ansøgning");
@@ -108,23 +111,23 @@
             setJobFile(null);
         }
 
-        const copyApplicationOutput = () => {
-            if (applicationOutput) {
-                setIsApplicationCopied(true);
-                navigator.clipboard.writeText(applicationOutput);
+        const copyInterviewOutput = () => {
+            if (questionsOutput.length > 0) {
+                setIsInterviewCopied(true);
+                navigator.clipboard.writeText(questionsOutput.join("\n"));
             }
         }
 
-        const copyMailOutput = () => {
-            if (mailOutput) {
-                setIsMailCopied(true);
-                navigator.clipboard.writeText(mailOutput);
+        const copyElevatorOutput = () => {
+            if (elevatorOutput) {
+                setIsElevatorCopied(true);
+                navigator.clipboard.writeText(elevatorOutput);
             }
         }
 
         const downloadOutput = () => {
-            if (!applicationOutput) return;
-            const blob = new Blob([applicationOutput], { type: 'text/markdown' });
+            if (questionsOutput.length === 0) return;
+            const blob = new Blob([questionsOutput.join("\n")], { type: 'text/markdown' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -309,71 +312,68 @@
                     {isCompleted && (
                         <div className="flex items-center justify-between gap-10 w-full h-full rounded-lg ">
                             <section className="flex flex-col items-center rounded-lg w-1/3 h-140 bg-slate-900 p-4">
-                            <div className="w-full h-2/5 flex flex-col items-center gap-8">
+                            <div className="w-full h-2/6 flex flex-col items-center gap-8">
                                 <h4 className="text-lg sm:text-2xl font-semibold">Forventet Løn</h4>
-                                <div className="w-30 h-30 relative">
-                                    <CircularProgressbar
-                                    value={matchOutput}
-                                    styles={buildStyles({
-                                        pathColor: `rgba(6, 182, 212, ${matchOutput / 100})`,
-                                        textColor: '#5479c2ff',
-                                        trailColor: '#f1f5f9',                                         
-                                    })}
-                                />
-                                   <div className="absolute inset-0 flex items-center justify-center text-white font-semibold">
-                                        {matchOutput}%
-                                    </div>
+                                <div className="w-30 h-30 relative">                                    
+                                    {salaryOutput} kr.
                                 </div>
                                 
                             </div>
-                            <div className="w-full h-3/5 flex flex-col gap-4">
+                            <div className="w-full h-4/6 flex flex-col gap-4">
                                 <h4 className="text-lg sm:text-2xl font-semibold">Elevator pitch</h4>
                                 <textarea 
                                 className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400  placeholder:text-xs sm:placeholder:text-sm resize-none 
                                 ${scrollbarStyle} ${
                                     isLoading ? "opacity-50 cursor-not-allowed" : ""
                                 }`}                        
-                                value={mailOutput}        
+                                value={elevatorOutput}        
                                 onChange={(e) => setCvText(e.target.value)}
                                 disabled={isLoading}
                                 />
                                 <button
-                                    onClick={copyMailOutput}
+                                    onClick={copyElevatorOutput}
                                     className='py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center justify-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
-                                    {isMailCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                                    {isMailCopied ? "Kopieret" : "Kopiér"}
+                                    {isElevatorCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                                    {isElevatorCopied ? "Kopieret" : "Kopiér"}
                                 </button>
                             </div>
                             
                             </section>
                             <section className="flex flex-col gap-4 rounded-lg w-2/3 h-140 bg-slate-900 p-4">
-                            <div className="text-left">
-                                <h4 className="text-lg sm:text-2xl font-semibold">Interview spørgsmål</h4>
-                            </div>                            
-                            <textarea 
-                                className={`w-full h-110 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none 
-                                ${scrollbarStyle} ${
-                                    isLoading ? "opacity-50 cursor-not-allowed" : ""
-                                }`}             
-                                value={applicationOutput}
-                                onChange={(e) => setCvText(e.target.value)}
-                                disabled={isLoading}
-                            />
-                            <div className='flex items-center gap-2'>
-                                <button
-                                    onClick={copyApplicationOutput}
-                                    className='py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
-                                    {isApplicationCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                                    {isApplicationCopied ? "Kopieret" : "Kopiér"}
-                                </button>
-                                <button
-                                    onClick={downloadOutput}
-                                    className='py-1 px-2 sm:py-2 sm:px-3  bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md 
-                                    hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
-                                    <Download className="h-4 w-4" />
-                                    Download
-                                </button>
-                            </div>
+                                <h4 className="mb-2">{introductionOutput}</h4>          
+                                <div className={`w-full h-110 overflow-y-auto flex flex-col gap-4 p-2 ${scrollbarStyle}`}>
+                                {questionsOutput.map((question, index) => (
+                                    <div key={index} className="flex flex-col gap-2">
+                                    <label className="text-sm font-semibold text-blue-400 text-left">
+                                        {question}
+                                    </label>
+                                    <textarea
+                                        className={`w-full h-20 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none
+                                        ${scrollbarStyle} ${
+                                        isLoading ? "opacity-50 cursor-not-allowed" : ""
+                                        }`}
+                                        placeholder="Skriv dit svar her..."
+                                        disabled={isLoading}
+                                    />
+                                    </div>
+                                ))}
+                                </div>
+
+                                <div className='flex items-center gap-2'>
+                                    <button
+                                        onClick={copyInterviewOutput}
+                                        className='py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
+                                        {isInterviewCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                                        {isInterviewCopied ? "Kopieret" : "Kopiér"}
+                                    </button>
+                                    <button
+                                        onClick={downloadOutput}
+                                        className='py-1 px-2 sm:py-2 sm:px-3  bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md 
+                                        hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
+                                        <Download className="h-4 w-4" />
+                                        Download
+                                    </button>
+                                </div>
                             </section>
                         </div>
                     )}

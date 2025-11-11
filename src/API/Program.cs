@@ -7,6 +7,7 @@ using Application.Interfaces.IAIService;
 using Application.Interfaces.IFileProcessing;
 using Application.Interfaces.IApplicationService;
 using Application.Services.ApplicationService;
+using Application.Interfaces.IInterviewService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Configuration["OpenAI:ApiKey"] = apiKey; // <-- tilføj denne linje
 builder.Services.AddHttpClient<IAIService, OpenAiService>();
 builder.Services.AddScoped<IFileProcessing, FileProcessing>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddMemoryCache();
 
 

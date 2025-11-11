@@ -1,4 +1,5 @@
 using Application.DTOs.Interview;
+using Application.DTOs.InterviewRequestDto;
 using Application.Interfaces.IAIService;
 using Application.Interfaces.IFileProcessing;
 using Application.Interfaces.IInterviewService;
@@ -28,21 +29,26 @@ namespace Application.Services
             throw new ArgumentException("Either text or file input must be provided.");
         }
 
-        public async Task<OverallInterviewDto> StartInterviewAsync(string? cvText, IFormFile? cvFile, string? jobText, IFormFile? jobFile)
+        public async Task<InterviewOutputDto> StartInterviewAsync(InterviewRequestDto interviewRequestDto)
         {
-            var cv = await GetTextAsync(cvText, cvFile);
-            var job = await GetTextAsync(jobText, jobFile);
+            var cv = await GetTextAsync(interviewRequestDto.CvText, interviewRequestDto.CvFile);
+            var job = await GetTextAsync(interviewRequestDto.JobPostingText, interviewRequestDto.JobPostingFile);
 
             // Bruger eksisterende OpenAiService
             var prompt = $$"""
-            Du er en professionel HR-rekrutteringskonsulent. 
+            Du er en professionel HR-rekrutteringskonsulent for virksomheden, der nævnes i jobopslaget. 
             Analysér følgende CV og jobopslag, og generér 5-8 relevante interviewspørgsmål.
             Spørgsmålene skal være på dansk, realistiske og målrettet stillingen.
+            Ud fra CV og jobopslag, skal du også generere en skarp elevator pitch, der taler ind til de vigtigste kvalifikationer og erfaringer i CV'et, som matcher jobopslaget. Opstil pitchen professionelt med passende afsnit og mellemrum imellem afsnit. Gør den fængende og overbevisende for en HR-medarbejder, og giv den gerne noget personlighed.
+            Endelig skal du give et realistisk skøn over den forventede løn baseret på kandidatens alder, erfaring, uddannelse, område og stillingstype.
 
-            Returnér JSON i dette format:
+
+            Returnér KUN gyldig JSON i dette format:
             {
               "introduction": "kort introduktion som HR-bot ville sige",
-              "questions": ["Spørgsmål 1...", "Spørgsmål 2...", ...]
+              "questions": ["Spørgsmål 1...", "Spørgsmål 2...", ...],
+              "elevatorPitch": "elevator pitch tekst",
+              "salaryEstimate": eks. "40.000-45.000"
             }
 
             CV:
@@ -54,14 +60,12 @@ namespace Application.Services
 
             var aiResponse = await _aiService.GenerateInterviewQuestionsAsync(prompt);
 
-            return new OverallInterviewDto
+            return new InterviewOutputDto
             {
-                CandidateName = "Bruger", // evt. udledt fra CV senere
-                Position = "Ukendt stilling",
-                OverallFeedback = aiResponse.OverallFeedback,
-                Responses = aiResponse.Responses
-                    .Select(q => new SingleInterviewDto { Question = q.Question })
-                    .ToList()
+                Introduction = aiResponse.Introduction,
+                Questions = aiResponse.Questions,
+                ElevatorPitch = aiResponse.ElevatorPitch,
+                SalaryEstimate = aiResponse.SalaryEstimate
             };
         }
 
