@@ -6,6 +6,7 @@
     import {Copy, Download, Check, Loader2, X} from "lucide-react";
     import {interviewService} from "../AIService/InterviewService";
     import { scrollbarStyle } from "../components/ScrollbarStyle";
+    import AnimatedSalary from "../components/AnimatedSalary";
 
 
 
@@ -314,10 +315,9 @@
                             <section className="flex flex-col items-center rounded-lg w-1/3 h-140 bg-slate-900 p-4">
                             <div className="w-full h-2/6 flex flex-col items-center gap-8">
                                 <h4 className="text-lg sm:text-2xl font-semibold">Forventet Løn</h4>
-                                <div className="w-30 h-30 relative">                                    
-                                    {salaryOutput} kr.
-                                </div>
-                                
+                                <div className="w-full flex items-center justify-center mt-2">                                    
+                                   <AnimatedSalary salary={salaryOutput} />
+                                </div>                                
                             </div>
                             <div className="w-full h-4/6 flex flex-col gap-4">
                                 <h4 className="text-lg sm:text-2xl font-semibold">Elevator pitch</h4>
