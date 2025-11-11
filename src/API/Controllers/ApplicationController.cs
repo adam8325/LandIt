@@ -17,7 +17,7 @@ namespace API.Controllers
         }
 
         [HttpPost("generate")]
-        public async Task<IActionResult> Generate([FromForm] ApplicationRequest request)
+        public async Task<IActionResult> Generate([FromForm] ApplicationRequestDto request)
         {
             var result = await _applicationService.ExecuteAsync(request);
             return Ok(result);

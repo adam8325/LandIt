@@ -29,7 +29,7 @@ namespace Application.Services
             throw new ArgumentException("Either text or file input must be provided.");
         }
 
-        public async Task<InterviewOutputDto> StartInterviewAsync(InterviewRequestDto interviewRequestDto)
+        public async Task<InterviewStartResponseDto> StartInterviewAsync(InterviewStartRequestDto interviewRequestDto)
         {
             var cv = await GetTextAsync(interviewRequestDto.CvText, interviewRequestDto.CvFile);
             var job = await GetTextAsync(interviewRequestDto.JobPostingText, interviewRequestDto.JobPostingFile);
@@ -60,7 +60,7 @@ namespace Application.Services
 
             var aiResponse = await _aiService.GenerateInterviewQuestionsAsync(prompt);
 
-            return new InterviewOutputDto
+            return new InterviewStartResponseDto
             {
                 Introduction = aiResponse.Introduction,
                 Questions = aiResponse.Questions,
@@ -69,7 +69,7 @@ namespace Application.Services
             };
         }
 
-        public async Task<OverallInterviewDto> EvaluateInterviewAsync(List<(string Question, string Answer)> responses)
+        public async Task<InterviewEvaluationResultDto> EvaluateInterviewAsync(List<InterviewEvaluationRequestDto> responses)
         {
             var formattedAnswers = string.Join("\n", responses.Select(r => $"Spørgsmål: {r.Question}\nSvar: {r.Answer}\n"));
 
@@ -90,7 +90,7 @@ namespace Application.Services
             {{formattedAnswers}}
             """;
 
-            var aiResponse = await _aiService.EvaluateInterviewAsync(prompt);
+            var aiResponse = await _aiService.EvaluateInterviewAnswersAsync(prompt);
 
             return aiResponse;
         }

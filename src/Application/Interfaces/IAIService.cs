@@ -6,8 +6,8 @@ namespace Application.Interfaces.IAIService
 {
     public interface IAIService
     {
-        Task<ApplicationResponse> GenerateApplicationAsync(string cv, string jobPosting);
-        Task<InterviewOutputDto> GenerateInterviewQuestionsAsync(string prompt);
-        Task<OverallInterviewDto> EvaluateInterviewAsync(string prompt);
+        Task<ApplicationResponseDto> GenerateApplicationAsync(string cv, string jobPosting);
+        Task<InterviewStartResponseDto> GenerateInterviewQuestionsAsync(string prompt);
+        Task<InterviewEvaluationResultDto> EvaluateInterviewAnswersAsync(string prompt);
     }
 }

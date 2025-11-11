@@ -6,7 +6,7 @@ namespace Application.Interfaces.IInterviewService
 {
     public interface IInterviewService
     {
-        Task<InterviewOutputDto> StartInterviewAsync(InterviewRequestDto interviewRequestDto);
-        Task<OverallInterviewDto> EvaluateInterviewAsync(List<(string Question, string Answer)> responses);
+        Task<InterviewStartResponseDto> StartInterviewAsync(InterviewStartRequestDto interviewRequestDto);
+        Task<InterviewEvaluationResultDto> EvaluateInterviewAsync(List<InterviewEvaluationRequestDto> responses);
     }
 }

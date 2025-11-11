@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.DTOs.InterviewRequestDto
 {
-    public class InterviewRequestDto
+    public class InterviewStartRequestDto
     {
         public string? CvText { get; set; }
         public IFormFile? CvFile { get; set; }

@@ -24,28 +24,28 @@ namespace Infrastructure.Services
             _apiKey = config["OpenAI:ApiKey"] ?? throw new ArgumentNullException("OpenAI API key not configured");
         }
 
-        public async Task<InterviewOutputDto> GenerateInterviewQuestionsAsync(string prompt)
+        public async Task<InterviewStartResponseDto> GenerateInterviewQuestionsAsync(string prompt)
         {
             var response = await CallOpenAiAsync(prompt);
             var content = response.Choices.FirstOrDefault()?.Message?.Content ?? "";
 
-            var parsed = JsonSerializer.Deserialize<InterviewOutputDto>(CleanJsonString(content), new JsonSerializerOptions
+            var parsed = JsonSerializer.Deserialize<InterviewStartResponseDto>(CleanJsonString(content), new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
-            }) ?? new InterviewOutputDto();
+            }) ?? new InterviewStartResponseDto();
 
             return parsed;
         }
 
-        public async Task<OverallInterviewDto> EvaluateInterviewAsync(string prompt)
+        public async Task<InterviewEvaluationResultDto> EvaluateInterviewAnswersAsync(string prompt)
         {
             var response = await CallOpenAiAsync(prompt);
             var content = response.Choices.FirstOrDefault()?.Message?.Content ?? "";
 
-            var parsed = JsonSerializer.Deserialize<OverallInterviewDto>(CleanJsonString(content), new JsonSerializerOptions
+            var parsed = JsonSerializer.Deserialize<InterviewEvaluationResultDto>(CleanJsonString(content), new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
-            }) ?? new OverallInterviewDto();
+            }) ?? new InterviewEvaluationResultDto();
 
             return parsed;
         }
@@ -70,7 +70,7 @@ namespace Infrastructure.Services
         }
 
 
-        public async Task<ApplicationResponse> GenerateApplicationAsync(string cv, string jobPosting)
+        public async Task<ApplicationResponseDto> GenerateApplicationAsync(string cv, string jobPosting)
         {
             var prompt = $$"""
             Du er en dansk, professionel jobcoach med stor erfaring i CV og jobansøgninger, og du ved, hvordan man skriver en effektiv ansøgning, og hvad jobmarkedet efterspørger. Opstil ansøgningen og email udkasten professionelt med passende formatering og mellemrum mellem afsnit. MatchScoren skal være en realistisk vurdering af, hvor godt ansøgningen matcher jobopslaget baseret på færdigheder, erfaring, uddannelse og andre relevante faktorer. Analysér følgende CV og jobopslag:
@@ -116,7 +116,7 @@ namespace Infrastructure.Services
 
         
 
-        private ApplicationResponse ParseResponse(OpenAiResponse openAiResponse)
+        private ApplicationResponseDto ParseResponse(OpenAiResponse openAiResponse)
         {
             var content = openAiResponse.Choices.FirstOrDefault()?.Message?.Content;
 
@@ -128,7 +128,7 @@ namespace Infrastructure.Services
             try
             {
                 // Expect the model to return valid JSON
-                var parsed = JsonSerializer.Deserialize<ApplicationResponse>(content, new JsonSerializerOptions
+                var parsed = JsonSerializer.Deserialize<ApplicationResponseDto>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
@@ -141,7 +141,7 @@ namespace Infrastructure.Services
             catch
             {
                 // Fallback in case AI returned plain text instead of JSON
-                return new ApplicationResponse
+                return new ApplicationResponseDto
                 {
                     ApplicationText = content,
                     EmailDraft = "Kunne ikke parse JSON – tjek model-output",
