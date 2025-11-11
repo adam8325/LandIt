@@ -9,6 +9,7 @@ using Application.Interfaces;
 using Application.Interfaces.IAIService;
 using Infrastructure.Models;
 using Microsoft.Extensions.Configuration;
+using Application.DTOs.Interview;
 
 namespace Infrastructure.Services
 {
@@ -22,6 +23,52 @@ namespace Infrastructure.Services
             _httpClient = httpClient;
             _apiKey = config["OpenAI:ApiKey"] ?? throw new ArgumentNullException("OpenAI API key not configured");
         }
+
+        public async Task<OverallInterviewDto> GenerateInterviewQuestionsAsync(string prompt)
+        {
+            var response = await CallOpenAiAsync(prompt);
+            var content = response.Choices.FirstOrDefault()?.Message?.Content ?? "";
+
+            var parsed = JsonSerializer.Deserialize<OverallInterviewDto>(CleanJsonString(content), new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new OverallInterviewDto();
+
+            return parsed;
+        }
+
+        public async Task<OverallInterviewDto> EvaluateInterviewAsync(string prompt)
+        {
+            var response = await CallOpenAiAsync(prompt);
+            var content = response.Choices.FirstOrDefault()?.Message?.Content ?? "";
+
+            var parsed = JsonSerializer.Deserialize<OverallInterviewDto>(CleanJsonString(content), new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new OverallInterviewDto();
+
+            return parsed;
+        }
+
+        private async Task<OpenAiResponse> CallOpenAiAsync(string prompt)
+        {
+            var requestBody = new
+            {
+                model = "gpt-4o-mini",
+                messages = new[] { new { role = "user", content = prompt } }
+            };
+
+            using var requestMessage = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+            requestMessage.Content = JsonContent.Create(requestBody);
+
+            var response = await _httpClient.SendAsync(requestMessage);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<OpenAiResponse>() 
+                ?? throw new InvalidOperationException("Failed to parse OpenAI response");
+        }
+
 
         public async Task<ApplicationResponse> GenerateApplicationAsync(string cv, string jobPosting)
         {
@@ -66,6 +113,8 @@ namespace Infrastructure.Services
 
             return ParseResponse(jsonResponse);
         }
+
+        
 
         private ApplicationResponse ParseResponse(OpenAiResponse openAiResponse)
         {

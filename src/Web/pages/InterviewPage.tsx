@@ -5,7 +5,7 @@
     import { faFileLines } from '@fortawesome/free-regular-svg-icons'
     import {Copy, Download, Check, Loader2, X} from "lucide-react";
     import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-    import {applicationService} from "../AIService/ApplicationService";
+    import {generateQuestions} from "../AIService/InterviewService";
     import { scrollbarStyle } from "../components/ScrollbarStyle";
 
     //   onSessionCreated: (newSessionId: string) => void;
