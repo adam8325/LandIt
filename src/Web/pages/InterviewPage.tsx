@@ -8,8 +8,6 @@
     import {generateQuestions} from "../AIService/InterviewService";
     import { scrollbarStyle } from "../components/ScrollbarStyle";
 
-    //   onSessionCreated: (newSessionId: string) => void;
-    // };
 
     export default function InterviewPage() {
 
@@ -41,7 +39,7 @@
                 setIsApplicationCopied(false);
                 setIsCompleted(false);
 
-                const response = await applicationService.generateApplication({
+                const response = await generateQuestions({
                 cvText: option === "text" ? cvText : undefined,
                 cvFile: option === "upload" ? cvFile : undefined,
                 jobPostingText,

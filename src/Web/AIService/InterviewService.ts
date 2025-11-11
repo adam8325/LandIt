@@ -1,9 +1,10 @@
 import axios from "axios";
+import type { InterviewRequest } from "../Models/InterviewModels";
 
 const BASE_URL = "http://localhost:7131/api/Interview";
 
-export const generateQuestions = async (cvText: string, jobPostingText: string) => {
-  const { data } = await axios.post(`${BASE_URL}/start`, { cvText, jobPostingText });
+export const generateQuestions = async (InterviewData: InterviewRequest) => {
+  const { data } = await axios.post(`${BASE_URL}/start`, InterviewData);
   return data;
 };
 
