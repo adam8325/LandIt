@@ -3,14 +3,11 @@
     import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
     import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
     import { faFileLines } from '@fortawesome/free-regular-svg-icons'
-    import {Copy, Download, Check, Loader2, X} from "lucide-react";
+    import {Check, Loader2, X} from "lucide-react";
     import {interviewService} from "../AIService/InterviewService";
     import { scrollbarStyle } from "../components/ScrollbarStyle";
-    import AnimatedSalary from "../components/AnimatedSalary";
     import type { InterviewEvaluationResult } from "../Models/InterviewModels";
-
-
-
+    import InterviewSimulation from "../components/InterviewSimulation";
     export default function InterviewPage() {
 
         const [questions, setQuestions] = useState<Array<string>>([]);
@@ -35,7 +32,6 @@
         const [jobFile, setJobFile] = useState<File | null>(null);
 
         const [isLoading, setIsLoading] = useState<boolean>(false);
-        const [isElevatorCopied, setIsElevatorCopied] = useState<boolean>(false);
         const [isCompleted, setIsCompleted] = useState<boolean>(false);
         const [error, setError] = useState<string | null>(null);
 
@@ -47,7 +43,6 @@
             try {
                 setIsLoading(true);
                 setError(null);
-                setIsElevatorCopied(false);
                 setIsCompleted(false);
 
                 const response = await interviewService.generateQuestions({
@@ -141,14 +136,6 @@
         const removeJobFile = () => {
             setJobFile(null);
         }
-
-        const copyElevatorOutput = () => {
-            if (elevatorOutput) {
-                setIsElevatorCopied(true);
-                navigator.clipboard.writeText(elevatorOutput);
-            }
-        }
-
     
 
         return (
@@ -161,13 +148,18 @@
                         </Link>
                         <section className="flex flex-col items-center justify-center">
                             <h1 className="font-bold mb-2 text-4xl pb-1 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
-                                Øv dig til samtalen
+                                {!isCompleted ? "Øv dig til samtalen" : "Interview Simulator"}
                             </h1>
 
-                            <p className="text-gray-300 text-sm">Tilføj dit CV og jobopslaget for at starte et interview</p>
+                            <p className="text-gray-300 text-sm">
+                                {!isCompleted ? "Tilføj dit CV og jobopslaget for at starte et interview" : "Øv dig på dine interview-skills med AI"}
+                            </p>
                         </section>
                         <p></p>
-                    </div>                
+                    </div>  
+                
+                {!isCompleted ? (
+                    <>                                 
 
                     <div className="w-full flex flex-col sm:flex-row items-center gap-10">
                         <section className="w-1/2 flex flex-col bg-slate-900 px-4 py-2 text-center gap-2 rounded-lg">
@@ -314,102 +306,27 @@
                             {isCompleted && !isLoading && <Check className="h-4 w-4 text-blue-500" />}
 
                              <span className="bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 bg-clip-text text-transparent text-shadow-md/10 group-hover:text-white">
-                                {isCompleted ? "Kom i gang!" : "Start interview"}
+                                {isLoading? "Genererer spørgsmål" : isCompleted ? "Kom i gang!" : "Start interview"}
                             </span>
                             
                         </button>
                     </div>
+                    </>
 
-                    {isCompleted && (
-                        <div className="flex items-center justify-between gap-10 w-full h-full rounded-lg ">
-                            <section className="flex flex-col items-center rounded-lg w-1/3 h-140 bg-slate-900 p-4">
-                            <div className="w-full h-2/6 flex flex-col items-center gap-8">
-                                <h4 className="text-lg sm:text-2xl font-semibold">Forventet Løn</h4>
-                                <div className="w-full flex items-center justify-center mt-2">                                    
-                                   <AnimatedSalary salary={salaryOutput} />
-                                </div>                                
-                            </div>
-                            <div className="w-full h-4/6 flex flex-col gap-4">
-                                <h4 className="text-lg sm:text-2xl font-semibold">Elevator pitch</h4>
-                                <textarea 
-                                className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400  placeholder:text-xs sm:placeholder:text-sm resize-none 
-                                ${scrollbarStyle} ${
-                                    isLoading ? "opacity-50 cursor-not-allowed" : ""
-                                }`}                        
-                                value={elevatorOutput}        
-                                onChange={(e) => setCvText(e.target.value)}
-                                disabled={isLoading}
-                                />
-                                <button
-                                    onClick={copyElevatorOutput}
-                                    className='py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center justify-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
-                                    {isElevatorCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                                    {isElevatorCopied ? "Kopieret" : "Kopiér"}
-                                </button>
-                            </div>
-                            
-                            </section>
-                            <section className="flex flex-col gap-4 rounded-lg w-2/3 h-140 bg-slate-900 p-4">
-                                <h4 className="mb-2 text-lg px-4">{introductionOutput}</h4>          
-                                <div className={`w-full h-110 overflow-y-auto flex flex-col gap-4 p-2 ${scrollbarStyle}`}>
-                                {questions.map((question, index) => {
-                                    const { answer, feedback, rating } = interviewEvaluations.evaluations[index] || {};
-                                    return (
-                                        <div key={index} className="flex flex-col gap-5">
-                                        <label className="text-sm font-semibold text-blue-400 text-left">
-                                            {question}
-                                        </label>
-                                        <textarea
-                                            className={`w-full h-20 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none
-                                            ${scrollbarStyle} ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-                                            placeholder="Skriv dit svar her..."
-                                            disabled={isLoading}
-                                            value={answer}
-                                            onChange={(e) => {
-                                                const newAnswers = [...answers];
-                                                newAnswers[index] = e.target.value;
-                                                setAnswers(newAnswers); 
-                                            }}
-                                        />
-                                            <div className="flex w-full text-xs">
-                                                {feedback && (
-                                                <p className="text-gray-400 text-left w-8/10">
-                                                {feedback}
-                                                </p>
-                                            )}
-                                            {rating > 0 && (
-                                                <p className="flex text-yellow-400 w-2/10 justify-end">
-                                                {"⭐".repeat(rating)} ({rating}/5)
-                                                </p>
-                                            )}
-                                            </div>      
-                                             <div className="flex-grow h-[1px] bg-gradient-to-r from-blue-400 to-blue-600"></div>                                  
-                                        </div>
-                                    );
-                                    })}
-                                    {evaluationCompleted && (
-                                        <div className="flex flex-col gap-2">
-                                            <div className="grid grid-cols-3 justify-between">
-                                                <p></p>
-                                                <h4>Samlet vurdering</h4>
-                                                <p className="text-sm ml-auto">{interviewEvaluations.averageRating}/5</p>
-                                            </div>
-                                            <p className="text-sm">{interviewEvaluations.overallFeedback}</p>                                           
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className='flex items-center justify-center gap-2'>
-                                    <button
-                                        onClick={handleInterview}
-                                        className='py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
-                                        Evaluér Interview
-                                    </button>
-                                </div>
-                            </section>
-                        </div>
-                    )}
-
+                )
+                : (
+                    <InterviewSimulation
+                        questions={questions}
+                        answers={answers}
+                        setAnswers={setAnswers}
+                        introduction={introductionOutput}
+                        salaryOutput={salaryOutput}
+                        elevatorOutput={elevatorOutput}
+                        onEvaluate={handleInterview}
+                        evaluations={interviewEvaluations}
+                        evaluationCompleted={evaluationCompleted}
+                        />
+                )}
                 </div>
                 
             </div>
