@@ -37,7 +37,7 @@ namespace Application.Services
             // Bruger eksisterende OpenAiService
             var prompt = $$"""
             Du er en professionel HR-rekrutteringskonsulent for virksomheden, der nævnes i jobopslaget. 
-            Analysér følgende CV og jobopslag, og generér 5-8 relevante interviewspørgsmål.
+            Analysér følgende CV og jobopslag, og generér 2 relevante interviewspørgsmål.
             Spørgsmålene skal være på dansk, realistiske og målrettet stillingen.
             Ud fra CV og jobopslag, skal du også generere en skarp elevator pitch, der taler ind til de vigtigste kvalifikationer og erfaringer i CV'et, som matcher jobopslaget. Opstil pitchen professionelt med passende afsnit og mellemrum imellem afsnit. Gør den fængende og overbevisende for en HR-medarbejder, og giv den gerne noget personlighed.
             Endelig skal du give et realistisk skøn over den forventede løn baseret på kandidatens alder, erfaring, uddannelse, område og stillingstype.
@@ -78,12 +78,13 @@ namespace Application.Services
             Giv hver et svar en rating mellem 1-5 og kort feedback.
             Til sidst, skriv samlet vurdering.
 
-            Returnér JSON i formatet:
+            Returnér Kun i gyldig JSON i formatet:
             {
               "evaluations": [
                 { "question": "...", "answer": "...", "rating": 1-5, "feedback": "..." }
               ],
-              "overallFeedback": "..."
+              "overallFeedback": "...",
+              "averageRating": (gennemsnit af ratings)
             }
 
             Svar:

@@ -12,12 +12,17 @@
 
     export default function InterviewPage() {
 
-        const [option, setOption] = useState<"upload" | "text">("upload");
-        const [questionsOutput, setQuestionsOutput] = useState<Array<string>>([]);
+        const [questions, setQuestions] = useState<Array<string>>([]);
+        const [answers, setAnswers] = useState<Array<string>>([]);
+        const [evaluations, setEvaluations] = useState(
+        questions.map(() => ({ answer: "", feedback: "", rating: 0 }))
+        );
+
         const [salaryOutput, setSalaryOutput] = useState<string>("");
         const [elevatorOutput, setElevatorOutput] = useState<string>("");
         const [introductionOutput, setIntroductionOutput] = useState<string>("");
 
+        const [option, setOption] = useState<"upload" | "text">("upload");
         const [cvText, setCvText] = useState("");
         const [cvFile, setCvFile] = useState<File | null>(null);
 
@@ -26,19 +31,18 @@
 
         const [isLoading, setIsLoading] = useState<boolean>(false);
         const [isElevatorCopied, setIsElevatorCopied] = useState<boolean>(false);
-        const [isInterviewCopied, setIsInterviewCopied] = useState<boolean>(false);
         const [isCompleted, setIsCompleted] = useState<boolean>(false);
         const [error, setError] = useState<string | null>(null);
 
         const cvInputRef = useRef<HTMLInputElement>(null);
         const jobInputRef = useRef<HTMLInputElement>(null);
 
+
         const handleSubmit = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
                 setIsElevatorCopied(false);
-                setIsInterviewCopied(false);
                 setIsCompleted(false);
 
                 const response = await interviewService.generateQuestions({
@@ -49,7 +53,7 @@
                 });
                 console.log('Interview Response:', response);
                 
-                setQuestionsOutput(response.questions);
+                setQuestions(response.questions);
                 setIntroductionOutput(response.introduction);
                 setElevatorOutput(response.elevatorPitch);
                 setSalaryOutput(response.salaryEstimate);
@@ -61,6 +65,28 @@
                 setIsLoading(false);
             }
         };
+
+        const handleInterview = async () => {
+            try {
+                const payload = questions.map((q, i) => ({
+                    question: q,
+                    answer: answers[i] ?? ""
+                }));
+
+                const response = await interviewService.evaluateAnswers(payload);
+                console.log("Evaluate result:", response);
+                setEvaluations(response.evaluations.map(e => ({
+                    answer: e.answer,
+                    feedback: e.feedback,
+                    rating: e.rating
+                }))
+                );
+
+            } catch (err) {
+                setError("Der opstod en fejl under evaluering af interviewet");
+                console.error(err);
+            }
+        }
 
         const handleCvUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
             const file = event.target.files?.[0];
@@ -112,13 +138,6 @@
             setJobFile(null);
         }
 
-        const copyInterviewOutput = () => {
-            if (questionsOutput.length > 0) {
-                setIsInterviewCopied(true);
-                navigator.clipboard.writeText(questionsOutput.join("\n"));
-            }
-        }
-
         const copyElevatorOutput = () => {
             if (elevatorOutput) {
                 setIsElevatorCopied(true);
@@ -127,8 +146,8 @@
         }
 
         const downloadOutput = () => {
-            if (questionsOutput.length === 0) return;
-            const blob = new Blob([questionsOutput.join("\n")], { type: 'text/markdown' });
+            if (questions.length === 0) return;
+            const blob = new Blob([questions.join("\n")], { type: 'text/markdown' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -342,29 +361,49 @@
                             <section className="flex flex-col gap-4 rounded-lg w-2/3 h-140 bg-slate-900 p-4">
                                 <h4 className="mb-2">{introductionOutput}</h4>          
                                 <div className={`w-full h-110 overflow-y-auto flex flex-col gap-4 p-2 ${scrollbarStyle}`}>
-                                {questionsOutput.map((question, index) => (
-                                    <div key={index} className="flex flex-col gap-2">
-                                    <label className="text-sm font-semibold text-blue-400 text-left">
-                                        {question}
-                                    </label>
-                                    <textarea
-                                        className={`w-full h-20 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none
-                                        ${scrollbarStyle} ${
-                                        isLoading ? "opacity-50 cursor-not-allowed" : ""
-                                        }`}
-                                        placeholder="Skriv dit svar her..."
-                                        disabled={isLoading}
-                                    />
-                                    </div>
-                                ))}
+                                {questions.map((question, index) => {
+                                    const { answer, feedback, rating } = evaluations[index] || {};
+                                    return (
+                                        <div key={index} className="flex flex-col gap-2">
+                                        <label className="text-sm font-semibold text-blue-400 text-left">
+                                            {question}
+                                        </label>
+                                        <textarea
+                                            className={`w-full h-20 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none
+                                            ${scrollbarStyle} ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+                                            placeholder="Skriv dit svar her..."
+                                            disabled={isLoading}
+                                            value={answer}
+                                            onChange={(e) => {
+                                                const newAnswers = [...answers];
+                                                newAnswers[index] = e.target.value;
+                                                setAnswers(newAnswers); 
+                                            }}
+                                        />
+                                            <div className="flex items-center justify-between">
+                                                {feedback && (
+                                                <p className="text-xs text-gray-400 mt-1">
+                                                Feedback: {feedback}
+                                                </p>
+                                            )}
+                                            {rating > 0 && (
+                                                <p className="text-yellow-400 text-xs">
+                                                {"⭐".repeat(rating)} ({rating}/5)
+                                                </p>
+                                            )}
+
+                                            </div>
+                                        
+                                        </div>
+                                    );
+                                    })}
                                 </div>
 
                                 <div className='flex items-center gap-2'>
                                     <button
-                                        onClick={copyInterviewOutput}
+                                        onClick={handleInterview}
                                         className='py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
-                                        {isInterviewCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                                        {isInterviewCopied ? "Kopieret" : "Kopiér"}
+                                        Evaluér Interview
                                     </button>
                                     <button
                                         onClick={downloadOutput}

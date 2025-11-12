@@ -1,11 +1,12 @@
 import axios from "axios";
-import type { InterviewRequest, InterviewOutput } from "../Models/InterviewModels";
+import type { InterviewEvaluationRequest, InterviewEvaluationResult, InterviewStartRequest, InterviewStartResponse } from "../Models/InterviewModels";
 
-const BASE_URL = "https://localhost:7131/api/Interview/start";
+const INTERVIEW_START_URL = "https://localhost:7131/api/Interview/start";
+const INTERVIEW_EVALUATE_URL = "https://localhost:7131/api/Interview/evaluate";
 
 export const interviewService = {
-    async generateQuestions(data: InterviewRequest):
-    Promise<InterviewOutput> {
+    async generateQuestions(data: InterviewStartRequest):
+    Promise<InterviewStartResponse> {
         const formData = new FormData();
 
         if (data.cvFile) formData.append("CvFile", data.cvFile);
@@ -13,16 +14,19 @@ export const interviewService = {
         if (data.cvText) formData.append("CvText", data.cvText);
         if (data.jobPostingText) formData.append("JobPostingText", data.jobPostingText);
 
-        const response = await axios.post<InterviewOutput>(BASE_URL, formData, {
+        const response = await axios.post<InterviewStartResponse>(INTERVIEW_START_URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         });
 
         return response.data;
     },
 
+    async evaluateAnswers(data: InterviewEvaluationRequest[]):
+    Promise<InterviewEvaluationResult> {
+        const response = await axios.post<InterviewEvaluationResult>(INTERVIEW_EVALUATE_URL, data);
+        return response.data;
+    }
+
+
 }
 
- export const evaluateAnswers = async (answers: { question: string; answer: string }[]) => {
-    const { data } = await axios.post(`${BASE_URL}/evaluate`, answers);
-    return data;
-    };
