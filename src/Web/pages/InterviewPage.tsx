@@ -7,6 +7,7 @@
     import {interviewService} from "../AIService/InterviewService";
     import { scrollbarStyle } from "../components/ScrollbarStyle";
     import AnimatedSalary from "../components/AnimatedSalary";
+    import type { InterviewEvaluationResult } from "../Models/InterviewModels";
 
 
 
@@ -14,13 +15,17 @@
 
         const [questions, setQuestions] = useState<Array<string>>([]);
         const [answers, setAnswers] = useState<Array<string>>([]);
-        const [evaluations, setEvaluations] = useState(
-        questions.map(() => ({ answer: "", feedback: "", rating: 0 }))
+        const [interviewEvaluations, setInterviewEvaluations] = useState<InterviewEvaluationResult>( {
+            evaluations: [],
+            overallFeedback: "",
+            averageRating: 0
+        }            
         );
 
         const [salaryOutput, setSalaryOutput] = useState<string>("");
         const [elevatorOutput, setElevatorOutput] = useState<string>("");
         const [introductionOutput, setIntroductionOutput] = useState<string>("");
+        const [evaluationCompleted, setEvaluationCompleted] = useState<boolean>(false);
 
         const [option, setOption] = useState<"upload" | "text">("upload");
         const [cvText, setCvText] = useState("");
@@ -67,6 +72,8 @@
         };
 
         const handleInterview = async () => {
+            setEvaluationCompleted(false);
+            setIsLoading(true);
             try {
                 const payload = questions.map((q, i) => ({
                     question: q,
@@ -75,12 +82,9 @@
 
                 const response = await interviewService.evaluateAnswers(payload);
                 console.log("Evaluate result:", response);
-                setEvaluations(response.evaluations.map(e => ({
-                    answer: e.answer,
-                    feedback: e.feedback,
-                    rating: e.rating
-                }))
-                );
+                setInterviewEvaluations(response);
+                setEvaluationCompleted(true);
+                setIsLoading(false);
 
             } catch (err) {
                 setError("Der opstod en fejl under evaluering af interviewet");
@@ -145,26 +149,13 @@
             }
         }
 
-        const downloadOutput = () => {
-            if (questions.length === 0) return;
-            const blob = new Blob([questions.join("\n")], { type: 'text/markdown' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'README.md';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
     
 
         return (
             <div className="bg-slate-950 p-8 h-full w-full">
                 <div className="w-3/4 flex flex-col items-center justify-center text-center text-white gap-10 mx-auto">
-                    <div className="flex justify-between items-center w-full">
-                        <Link to="/" className="btn py-1 px-2 rounded-lg font-semibold text-xs flex items-center justify-center gap-2
+                    <div className="grid grid-cols-3 w-full">
+                        <Link to="/" className="mr-auto btn py-1 px-2 rounded-lg font-semibold text-xs flex items-center justify-center gap-2
                             hover:border hover:border-blue-400 hover:bg-sky-900 transition-colors">
                                <span className="text-white">Hjem</span> 
                         </Link>
@@ -359,12 +350,12 @@
                             
                             </section>
                             <section className="flex flex-col gap-4 rounded-lg w-2/3 h-140 bg-slate-900 p-4">
-                                <h4 className="mb-2">{introductionOutput}</h4>          
+                                <h4 className="mb-2 text-lg px-4">{introductionOutput}</h4>          
                                 <div className={`w-full h-110 overflow-y-auto flex flex-col gap-4 p-2 ${scrollbarStyle}`}>
                                 {questions.map((question, index) => {
-                                    const { answer, feedback, rating } = evaluations[index] || {};
+                                    const { answer, feedback, rating } = interviewEvaluations.evaluations[index] || {};
                                     return (
-                                        <div key={index} className="flex flex-col gap-2">
+                                        <div key={index} className="flex flex-col gap-5">
                                         <label className="text-sm font-semibold text-blue-400 text-left">
                                             {question}
                                         </label>
@@ -380,37 +371,39 @@
                                                 setAnswers(newAnswers); 
                                             }}
                                         />
-                                            <div className="flex items-center justify-between">
+                                            <div className="flex w-full text-xs">
                                                 {feedback && (
-                                                <p className="text-xs text-gray-400 mt-1">
-                                                Feedback: {feedback}
+                                                <p className="text-gray-400 text-left w-8/10">
+                                                {feedback}
                                                 </p>
                                             )}
                                             {rating > 0 && (
-                                                <p className="text-yellow-400 text-xs">
+                                                <p className="flex text-yellow-400 w-2/10 justify-end">
                                                 {"⭐".repeat(rating)} ({rating}/5)
                                                 </p>
                                             )}
-
-                                            </div>
-                                        
+                                            </div>      
+                                             <div className="flex-grow h-[1px] bg-gradient-to-r from-blue-400 to-blue-600"></div>                                  
                                         </div>
                                     );
                                     })}
+                                    {evaluationCompleted && (
+                                        <div className="flex flex-col gap-2">
+                                            <div className="grid grid-cols-3 justify-between">
+                                                <p></p>
+                                                <h4>Samlet vurdering</h4>
+                                                <p className="text-sm ml-auto">{interviewEvaluations.averageRating}/5</p>
+                                            </div>
+                                            <p className="text-sm">{interviewEvaluations.overallFeedback}</p>                                           
+                                        </div>
+                                    )}
                                 </div>
 
-                                <div className='flex items-center gap-2'>
+                                <div className='flex items-center justify-center gap-2'>
                                     <button
                                         onClick={handleInterview}
                                         className='py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
                                         Evaluér Interview
-                                    </button>
-                                    <button
-                                        onClick={downloadOutput}
-                                        className='py-1 px-2 sm:py-2 sm:px-3  bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md 
-                                        hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
-                                        <Download className="h-4 w-4" />
-                                        Download
                                     </button>
                                 </div>
                             </section>
