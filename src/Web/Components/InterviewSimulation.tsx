@@ -59,7 +59,7 @@ export default function InterviewSimulation({
   return (
     <div className="flex items-center justify-between gap-10 w-full h-full rounded-lg text-white">
       {/* Left side */}
-      <section className="flex flex-col items-center rounded-lg w-1/3 h-140 bg-slate-900 p-4 gap-7">
+      <section className="flex flex-col items-center rounded-lg w-1/3 h-140 bg-gradient-to-b from-gray-900 via-transparent to-gray-900 border border-cyan-950 p-4 gap-7">
         <div className="text-center flex flex-col items-center gap-4">
           <h4 className="text-lg sm:text-2xl font-semibold">Forventet Løn</h4>
           <AnimatedSalary salary={salaryOutput} />
@@ -67,7 +67,7 @@ export default function InterviewSimulation({
         <div className="w-full flex flex-col gap-4">
           <h4 className="text-lg sm:text-2xl font-semibold">Elevator pitch</h4>
           <textarea
-            className={`w-full h-80 resize-none p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 ${scrollbarStyle}`}
+            className={`w-full h-80 resize-none p-2 bg-slate-800 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 ${scrollbarStyle}`}
             value={elevatorOutput}
             readOnly
           />
@@ -82,7 +82,7 @@ export default function InterviewSimulation({
       </section>
 
       {/* Right side */}
-      <section className="flex flex-col gap-4 rounded-lg w-2/3 h-140 bg-slate-900 p-4">
+      <section className="flex flex-col gap-4 rounded-lg w-2/3 h-140 bg-gradient-to-b from-gray-900 via-transparent to-gray-900 border border-cyan-950 p-4">
       
         {!evaluationCompleted ? 
         (
@@ -95,7 +95,7 @@ export default function InterviewSimulation({
             </div>
             <div className="h-8/13 flex flex-col justify-center gap-2">
               <textarea
-                className={`w-full resize-none h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 ${scrollbarStyle}`}
+                className={`w-full resize-none h-70 p-2 bg-slate-800 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 ${scrollbarStyle}`}
                 placeholder="Skriv dit svar her..."
                 value={answers[currentIndex] || ""}
                 onChange={(e) => {
@@ -105,7 +105,7 @@ export default function InterviewSimulation({
                 }}
               />
               {/* Placeholder for future voice recording button */}
-              <button className="flex items-center justify-center gap-2 cursor-pointer py-2 px-3 rounded-md bg-blue-700 text-white text-xs font-semibold hover:bg-blue-600">
+              <button className="flex items-center justify-center gap-2 py-1 px-2 sm:py-2 sm:px-3  bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white">
                 <Mic className="w-5 h-5"/> Indtal svar
               </button>
             </div>
@@ -123,14 +123,14 @@ export default function InterviewSimulation({
             {!isLastQuestion ? (
               <button
                 onClick={handleNext}
-                className="cursor-pointer py-2 px-4 bg-blue-600 rounded-md text-sm hover:bg-blue-700"
+                className="py-1 px-2 sm:py-2 sm:px-3  bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white"
               >
                 Næste
               </button>
             ) : (
               <button
                 onClick={onEvaluate}
-                className="cursor-pointer py-2 px-4 bg-blue-600 rounded-md text-sm hover:bg-blue-700"
+                className="py-1 px-2 sm:py-2 sm:px-3  bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white"
               >
                 Evaluér Interview
               </button>

@@ -138,6 +138,10 @@
         }
 
        const resetInterview = () => {
+        setCvFile(null);
+        setCvText("");
+        setJobFile(null);
+        setJobPostingText("");
         setQuestions([]);
         setAnswers([]);
         setInterviewEvaluations({
@@ -178,7 +182,7 @@
                     <>                                 
 
                     <div className="w-full flex flex-col sm:flex-row items-center gap-10">
-                        <section className="w-1/2 flex flex-col bg-slate-900 px-4 py-2 text-center gap-2 rounded-lg">
+                        <section className="w-1/2 flex flex-col bg-gradient-to-b from-gray-900 via-transparent to-gray-900 border border-cyan-950 px-4 py-2 text-center gap-2 rounded-lg">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="flex items-center gap-1">
@@ -226,7 +230,7 @@
                             
                             <div>
                                 <textarea 
-                                    className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none 
+                                    className={`w-full h-70 p-2 bg-slate-800 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none 
                                     ${scrollbarStyle} ${
                                         isLoading || cvFile !== null ? "opacity-50 cursor-not-allowed" : ""
                                     }`}
@@ -239,7 +243,7 @@
                             
                         </section>
 
-                        <section className="w-1/2 flex flex-col bg-slate-900 px-4 py-2 text-center gap-2 rounded-lg">
+                        <section className="w-1/2 flex flex-col bg-gradient-to-b from-gray-900 via-transparent to-gray-900 border border-cyan-950 px-4 py-2 text-center gap-2 rounded-lg">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="flex items-center gap-1">
@@ -286,7 +290,7 @@
 
                             <div>
                                 <textarea 
-                                    className={`w-full h-70 p-2 bg-slate-950 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none 
+                                    className={`w-full h-70 p-2 bg-slate-800 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-xs sm:placeholder:text-sm resize-none 
                                     ${scrollbarStyle} ${
                                         isLoading || jobFile !== null ? "opacity-50 cursor-not-allowed" : ""
                                     }`}

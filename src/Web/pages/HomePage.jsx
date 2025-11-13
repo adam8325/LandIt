@@ -14,7 +14,7 @@ export default function HomePage() {
 
       <div className="flex justify-between items-center gap-10">        
         <Link to="/application" className="group">
-          <div className="p-4 w-64 h-50 rounded-xl shadow-md bg-gray-900 flex flex-col items-center justify-evenly text-xl font-semibold transition-all duration-200 group-hover:shadow-lg group-hover:scale-105 border-1 hover:border-blue-500">
+          <div className="p-4 w-64 h-50 rounded-xl shadow-md bg-gradient-to-b from-gray-950 via-transparent to-gray-900 border border-cyan-500 flex flex-col items-center justify-evenly text-xl font-semibold transition-all duration-200 group-hover:shadow-lg group-hover:scale-105 border-1 hover:border-blue-500">
             <div className="w-full flex items-center justify-between">
               <Rocket className="text-blue-500 w-6 h-6" />
               <h4 className="text-lg text-white">Ansøgningen</h4>
@@ -25,7 +25,7 @@ export default function HomePage() {
         </Link>
 
         <Link to="/interview" className="group">
-          <div className="p-4 w-64 h-50 rounded-xl shadow-md bg-gray-900 flex flex-col items-center justify-evenly text-xl font-semibold transition-all duration-200 group-hover:shadow-lg group-hover:scale-105 border-1 hover:border-blue-500">
+          <div className="p-4 w-64 h-50 rounded-xl shadow-md bg-gradient-to-b from-gray-950 via-transparent to-gray-900 border border-cyan-500 flex flex-col items-center justify-evenly text-xl font-semibold transition-all duration-200 group-hover:shadow-lg group-hover:scale-105 border-1 hover:border-blue-500">
             <div className="w-full flex items-center justify-between">
               <Zap className="text-blue-500 w-6 h-6" />
               <h4 className="text-lg text-white">Samtalen</h4>
