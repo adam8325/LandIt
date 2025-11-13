@@ -5,7 +5,7 @@ import InterviewPage from "./pages/InterviewPage";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-black">
       <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />

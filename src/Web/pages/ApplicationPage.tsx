@@ -143,7 +143,7 @@
             <div className="bg-slate-950 p-8 h-full w-full">
                 <div className="w-3/4 flex flex-col items-center justify-center text-center text-white gap-10 mx-auto">
                     <div className="grid grid-cols-3 w-full">
-                        <Link to="/" className="mr-auto btn py-1 px-2 rounded-lg font-semibold text-xs flex items-center justify-center
+                        <Link to="/" className="place-self-start mr-auto btn py-1 px-2 rounded-lg font-semibold text-xs flex items-center justify-center
                             hover:border hover:border-blue-400 hover:bg-sky-900 transition-colors">
                                <span className="text-white">Hjem</span> 
                         </Link>

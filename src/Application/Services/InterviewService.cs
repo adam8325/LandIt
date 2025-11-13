@@ -34,18 +34,17 @@ namespace Application.Services
             var cv = await GetTextAsync(interviewRequestDto.CvText, interviewRequestDto.CvFile);
             var job = await GetTextAsync(interviewRequestDto.JobPostingText, interviewRequestDto.JobPostingFile);
 
-            // Bruger eksisterende OpenAiService
             var prompt = $$"""
             Du er en professionel HR-rekrutteringskonsulent for virksomheden, der nævnes i jobopslaget. 
             Analysér følgende CV og jobopslag, og generér 2 relevante interviewspørgsmål.
-            Spørgsmålene skal være på dansk, realistiske og målrettet stillingen.
+            Spørgsmålene skal være på dansk, realistiske og målrettet stillingen. Spørgsmålene skal være detaljerede og udfordrende, så de tester kandidatens færdigheder og erfaringer i forhold til jobopslaget. Hav fokus på både tekniske og bløde færdigheder. Tag udgangspunkt i både CV og jobopslag for at skabe relevante spørgsmål.
             Ud fra CV og jobopslag, skal du også generere en skarp elevator pitch, der taler ind til de vigtigste kvalifikationer og erfaringer i CV'et, som matcher jobopslaget. Opstil pitchen professionelt med passende afsnit og mellemrum imellem afsnit. Gør den fængende og overbevisende for en HR-medarbejder, og giv den gerne noget personlighed.
             Endelig skal du give et realistisk skøn over den forventede løn baseret på kandidatens alder, erfaring, uddannelse, område og stillingstype.
 
 
             Returnér KUN gyldig JSON i dette format:
             {
-              "introduction": "kort introduktion som HR-bot ville sige",
+              "introduction": "kort introduktion på 1 linje som HR-medarbejderen ville introducere interviewet med",
               "questions": ["Spørgsmål 1...", "Spørgsmål 2...", ...],
               "elevatorPitch": "elevator pitch tekst",
               "salaryEstimate": eks. "40.000-45.000"

@@ -136,13 +136,29 @@
         const removeJobFile = () => {
             setJobFile(null);
         }
-    
+
+       const resetInterview = () => {
+        setQuestions([]);
+        setAnswers([]);
+        setInterviewEvaluations({
+            evaluations: [],
+            overallFeedback: "",
+            averageRating: 0
+        });
+        setEvaluationCompleted(false);
+        setIsCompleted(false);
+        setIntroductionOutput("");
+        setSalaryOutput("");
+        setElevatorOutput("");
+        setError(null);
+        };
+
 
         return (
-            <div className="bg-slate-950 p-8 h-full w-full">
+            <div className="bg-slate-950 p-8 w-full min-h-screen">
                 <div className="w-3/4 flex flex-col items-center justify-center text-center text-white gap-10 mx-auto">
                     <div className="grid grid-cols-3 w-full">
-                        <Link to="/" className="mr-auto btn py-1 px-2 rounded-lg font-semibold text-xs flex items-center justify-center gap-2
+                        <Link to="/" className="place-self-start mr-auto btn py-1 px-2 rounded-lg font-semibold text-xs flex items-center justify-center gap-2
                             hover:border hover:border-blue-400 hover:bg-sky-900 transition-colors">
                                <span className="text-white">Hjem</span> 
                         </Link>
@@ -152,7 +168,7 @@
                             </h1>
 
                             <p className="text-gray-300 text-sm">
-                                {!isCompleted ? "Tilføj dit CV og jobopslaget for at starte et interview" : "Øv dig på dine interview-skills med AI"}
+                                {!isCompleted ? "Tilføj dit CV og jobopslaget for at starte et interview" : <>{introductionOutput}</>}
                             </p>
                         </section>
                         <p></p>
@@ -316,16 +332,17 @@
                 )
                 : (
                     <InterviewSimulation
-                        questions={questions}
-                        answers={answers}
-                        setAnswers={setAnswers}
-                        introduction={introductionOutput}
-                        salaryOutput={salaryOutput}
-                        elevatorOutput={elevatorOutput}
-                        onEvaluate={handleInterview}
-                        evaluations={interviewEvaluations}
-                        evaluationCompleted={evaluationCompleted}
-                        />
+                    questions={questions}
+                    answers={answers}
+                    setAnswers={setAnswers}
+                    onNewTry={resetInterview}
+                    introduction={introductionOutput}
+                    salaryOutput={salaryOutput}
+                    elevatorOutput={elevatorOutput}
+                    onEvaluate={handleInterview}
+                    evaluations={interviewEvaluations}
+                    evaluationCompleted={evaluationCompleted}
+                    />       
                 )}
                 </div>
                 
