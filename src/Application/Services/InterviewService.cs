@@ -18,21 +18,10 @@ namespace Application.Services
             _fileProcessing = fileProcessing;
         }
 
-        private async Task<string> GetTextAsync(string? text, IFormFile? file)
-        {
-            if (!string.IsNullOrWhiteSpace(text))
-                return text;
-
-            if (file != null)
-                return await _fileProcessing.ExtractTextAsync(file);
-
-            throw new ArgumentException("Either text or file input must be provided.");
-        }
-
         public async Task<InterviewStartResponseDto> StartInterviewAsync(InterviewStartRequestDto interviewRequestDto)
         {
-            var cv = await GetTextAsync(interviewRequestDto.CvText, interviewRequestDto.CvFile);
-            var job = await GetTextAsync(interviewRequestDto.JobPostingText, interviewRequestDto.JobPostingFile);
+            var cv = await _fileProcessing.GetTextAsync(interviewRequestDto.CvText, interviewRequestDto.CvFile);
+            var job = await _fileProcessing.GetTextAsync(interviewRequestDto.JobPostingText, interviewRequestDto.JobPostingFile);
 
             var prompt = $$"""
             Du er en professionel HR-rekrutteringskonsulent for virksomheden, der nævnes i jobopslaget. 

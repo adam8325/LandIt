@@ -10,3 +10,4 @@ namespace Application.DTOs.ApplicationRequest
         public IFormFile? JobPostingFile { get; set; }
     }
 }
+    
