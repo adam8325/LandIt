@@ -6,7 +6,7 @@
     import {Copy, Download, Check, Loader2, X} from "lucide-react";
     import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
     import {applicationService} from "../AIService/ApplicationService";
-    import { scrollbarStyle } from "../components/ScrollbarStyle";
+    import { scrollbarStyle } from "../Components/ScrollbarStyle";
 
     export default function ApplicationPage() {
 

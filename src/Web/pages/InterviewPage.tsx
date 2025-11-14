@@ -5,9 +5,9 @@
     import { faFileLines } from '@fortawesome/free-regular-svg-icons'
     import {Check, Loader2, X} from "lucide-react";
     import {interviewService} from "../AIService/InterviewService";
-    import { scrollbarStyle } from "../components/ScrollbarStyle";
+    import { scrollbarStyle } from "../Components/ScrollbarStyle";
     import type { InterviewEvaluationResult } from "../Models/InterviewModels";
-    import InterviewSimulation from "../components/InterviewSimulation";
+    import InterviewSimulation from "../Components/InterviewSimulation";
     export default function InterviewPage() {
 
         const [questions, setQuestions] = useState<Array<string>>([]);
