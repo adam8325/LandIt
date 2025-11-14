@@ -18,7 +18,7 @@ namespace Application.Services.ApplicationService
             _aiService = aiService;
         }
 
-        public async Task<ApplicationResponseDto> ExecuteAsync(ApplicationRequestDto request)
+        public async Task<ApplicationResponseDto> GenerateApplication(ApplicationRequestDto request)
         {
             var cvText = await _fileProcessing.GetTextAsync(request.CvText, request.CvFile);
             var jobText = await _fileProcessing.GetTextAsync(request.JobPostingText, request.JobPostingFile);

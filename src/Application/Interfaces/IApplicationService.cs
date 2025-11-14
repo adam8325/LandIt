@@ -6,6 +6,6 @@ namespace Application.Interfaces.IApplicationService
 {
     public interface IApplicationService
     {
-        Task<ApplicationResponseDto> ExecuteAsync(ApplicationRequestDto request);
+        Task<ApplicationResponseDto> GenerateApplication(ApplicationRequestDto request);
     }
 }
