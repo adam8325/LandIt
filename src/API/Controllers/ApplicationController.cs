@@ -1,4 +1,4 @@
-using Application.DTOs.ApplicationRequest;
+using Application.DTOs.User;
 using Application.Interfaces.IApplicationService;
 using Application.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +17,11 @@ namespace API.Controllers
         }
 
         [HttpPost("generate")]
-        public async Task<IActionResult> Generate([FromForm] ApplicationRequestDto request)
+        public async Task<IActionResult> Generate([FromForm] UserDocumentDto dto)
         {
             try
             {
-                var result = await _applicationService.GenerateApplication(request);
+                var result = await _applicationService.GenerateApplication(dto);
                 return Ok(result);
                 
             }

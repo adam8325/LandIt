@@ -1,9 +1,9 @@
 using Application.Interfaces.IApplicationService;
 using Application.Interfaces.IAIService;
 using Application.DTOs.ApplicationResponse;
-using Application.DTOs.ApplicationRequest;
 using Application.Interfaces.IFileProcessing;
 using Microsoft.AspNetCore.Http;
+using Application.DTOs.User;
 
 namespace Application.Services.ApplicationService
 {
@@ -18,12 +18,20 @@ namespace Application.Services.ApplicationService
             _aiService = aiService;
         }
 
-        public async Task<ApplicationResponseDto> GenerateApplication(ApplicationRequestDto request)
+        public async Task<ApplicationResponseDto> GenerateApplication(UserDocumentDto dto)
         {
-            var cvText = await _fileProcessing.GetTextAsync(request.CvText, request.CvFile);
-            var jobText = await _fileProcessing.GetTextAsync(request.JobPostingText, request.JobPostingFile);
 
-            return await _aiService.GenerateApplicationAsync(cvText, jobText);
+            if (dto.CvFile != null)
+            {
+                dto.CvText = await _fileProcessing.GetTextAsync(dto.CvText, dto.CvFile);
+            }
+            
+            if (dto.JobPostingFile != null)
+            {
+                dto.JobPostingText = await _fileProcessing.GetTextAsync(dto.JobPostingText, dto.JobPostingFile);
+            }
+
+            return await _aiService.GenerateApplicationAsync(dto);
         }
 
     }

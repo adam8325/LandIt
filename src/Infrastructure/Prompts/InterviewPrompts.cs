@@ -34,7 +34,7 @@ namespace Infrastructure.Prompts
             return prompt;
         }
 
-        public static string GetInterviewEvaluationPrompt(List<InterviewEvaluationRequestDto> responses)
+        public static string GetInterviewEvaluationPrompt(List<UserAnswerDto> responses)
         {
             var formattedAnswers = string.Join("\n", responses.Select(r => $"Spørgsmål: {r.Question}\nSvar: {r.Answer}\n"));
             var prompt = $$"""

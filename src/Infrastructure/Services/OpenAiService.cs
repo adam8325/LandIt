@@ -10,6 +10,7 @@ using Application.Interfaces.IAIService;
 using Microsoft.Extensions.Configuration;
 using Application.DTOs.Interview;
 using Infrastructure.Prompts;
+using Application.DTOs.User;
 
 namespace Infrastructure.Services
 {
@@ -24,9 +25,10 @@ namespace Infrastructure.Services
             _apiKey = config["OpenAI:ApiKey"] ?? throw new ArgumentNullException("OpenAI API key not configured");
         }
 
-        public async Task<ApplicationResponseDto> GenerateApplicationAsync(string cvText, string jobPostingText)
+        public async Task<ApplicationResponseDto> GenerateApplicationAsync(UserDocumentDto dto)
         {
-            var prompt = ApplicationPrompt.GetApplicationPrompt(cvText, jobPostingText);
+            
+            var prompt = ApplicationPrompt.GetApplicationPrompt(dto.CvText!, dto.JobPostingText!);
 
             var content = await CallOpenAiAsync(prompt);
             content = CleanJsonString(content);
@@ -37,19 +39,19 @@ namespace Infrastructure.Services
             return parsedContent;
         }
 
-        public async Task<InterviewStartResponseDto> GenerateInterviewAsync(string cvText, string jobPostingText)
+        public async Task<GeneratedInterviewDto> GenerateInterviewAsync(UserDocumentDto dto)
         {
-            var prompt = InterviewPrompts.GetInterviewStartPrompt(cvText, jobPostingText);
+            var prompt = InterviewPrompts.GetInterviewStartPrompt(dto.CvText!, dto.JobPostingText!);
             var content = await CallOpenAiAsync(prompt);
             content = CleanJsonString(content);
 
-            var parsedContent = JsonSerializer.Deserialize<InterviewStartResponseDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-                         ?? new InterviewStartResponseDto();
+            var parsedContent = JsonSerializer.Deserialize<GeneratedInterviewDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                         ?? new GeneratedInterviewDto();
 
             return parsedContent;
         }
 
-         public async Task<InterviewEvaluationResultDto> EvaluateInterviewAsync(List<InterviewEvaluationRequestDto> responses)
+         public async Task<EvaluationSummaryDto> EvaluateInterviewAsync(List<UserAnswerDto> responses)
         {
             var formattedAnswers = string.Join("\n", responses.Select(r => $"Spørgsmål: {r.Question}\nSvar: {r.Answer}\n"));
             var prompt = InterviewPrompts.GetInterviewEvaluationPrompt(responses);
@@ -57,8 +59,8 @@ namespace Infrastructure.Services
             var content = await CallOpenAiAsync(prompt);
             content = CleanJsonString(content);
 
-            var parsedContent = JsonSerializer.Deserialize<InterviewEvaluationResultDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-                         ?? new InterviewEvaluationResultDto();
+            var parsedContent = JsonSerializer.Deserialize<EvaluationSummaryDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                         ?? new EvaluationSummaryDto();
 
             return parsedContent;
         }

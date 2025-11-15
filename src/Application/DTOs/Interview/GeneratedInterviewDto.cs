@@ -1,5 +1,5 @@
 namespace Application.DTOs.Interview;
-public class InterviewStartResponseDto
+public class GeneratedInterviewDto
 {
     public string Introduction { get; set; } = "";
     public List<string> Questions { get; set; } = new List<string>();

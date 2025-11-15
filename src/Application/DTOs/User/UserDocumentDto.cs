@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Application.DTOs.InterviewRequestDto
+namespace Application.DTOs.User
 {
-    public class InterviewStartRequestDto
+    public class UserDocumentDto
     {
         public string? CvText { get; set; }
         public IFormFile? CvFile { get; set; }

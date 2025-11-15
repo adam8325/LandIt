@@ -1,5 +1,5 @@
 using Application.DTOs.Interview;
-using Application.DTOs.InterviewRequestDto;
+using Application.DTOs.User;
 using Application.Interfaces.IAIService;
 using Application.Interfaces.IFileProcessing;
 using Application.Interfaces.IInterviewService;
@@ -18,18 +18,25 @@ namespace Application.Services
             _fileProcessing = fileProcessing;
         }
 
-        public async Task<InterviewStartResponseDto> StartInterviewAsync(InterviewStartRequestDto interviewRequestDto)
+        public async Task<GeneratedInterviewDto> StartInterviewAsync(UserDocumentDto dto)
         {
-            var cv = await _fileProcessing.GetTextAsync(interviewRequestDto.CvText, interviewRequestDto.CvFile);
-            var job = await _fileProcessing.GetTextAsync(interviewRequestDto.JobPostingText, interviewRequestDto.JobPostingFile);
+            if (dto.CvFile != null)
+            {
+                dto.CvText = await _fileProcessing.GetTextAsync(dto.CvText, dto.CvFile);
+            }
+                
+            if (dto.JobPostingFile != null)
+            {
+                dto.JobPostingText = await _fileProcessing.GetTextAsync(dto.JobPostingText, dto.JobPostingFile);
+            }
 
-            var aiResponse = await _aiService.GenerateInterviewAsync(cv, job);
+            var aiResponse = await _aiService.GenerateInterviewAsync(dto);
 
             return aiResponse;
         }
 
 
-        public async Task<InterviewEvaluationResultDto> EvaluateInterviewAsync(List<InterviewEvaluationRequestDto> responses)
+        public async Task<EvaluationSummaryDto> EvaluateInterviewAsync(List<UserAnswerDto> responses)
         {
             // validate / sanitize if needed, then hand off to infrastructure AI service
             // (infrastructure builds prompt and returns parsed InterviewEvaluationResultDto)

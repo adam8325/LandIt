@@ -2,8 +2,8 @@ using Application.Interfaces;
 using Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces.IInterviewService;
-using Application.DTOs.InterviewRequestDto;
 using Application.DTOs.Interview;
+using Application.DTOs.User;
 
 namespace WebAPI.Controllers
 {
@@ -19,11 +19,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("start")]
-        public async Task<IActionResult> StartInterview([FromForm] InterviewStartRequestDto interviewRequestDto)
+        public async Task<IActionResult> StartInterview([FromForm] UserDocumentDto dto)
         {
             try
             {
-                var result = await _interviewService.StartInterviewAsync(interviewRequestDto);
+                var result = await _interviewService.StartInterviewAsync(dto);
                 return Ok(result);
                 
             }
@@ -34,7 +34,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("evaluate")]
-        public async Task<IActionResult> EvaluateInterview([FromBody] List<InterviewEvaluationRequestDto> responses)
+        public async Task<IActionResult> EvaluateInterview([FromBody] List<UserAnswerDto> responses)
         {
             try
             {

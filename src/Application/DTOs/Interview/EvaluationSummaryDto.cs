@@ -1,8 +1,8 @@
 namespace Application.DTOs.Interview
 {
-    public class InterviewEvaluationResultDto
+    public class EvaluationSummaryDto
     {
-        public List<InterviewEvaluationDto> Evaluations { get; set; } = new();
+        public List<EvaluationInterviewDto> Evaluations { get; set; } = new();
         public string OverallFeedback { get; set; } = string.Empty;
         public double AverageRating { get; set; }
     }

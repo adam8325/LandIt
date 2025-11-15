@@ -13,6 +13,22 @@ namespace Infrastructure.Services
     {
         private static readonly string[] SupportedTypes = { ".pdf", ".docx" };
 
+
+         public async Task<string> GetTextAsync(string? text, IFormFile? file)
+        {
+            if (!string.IsNullOrWhiteSpace(text))
+                return text;
+
+            if (file != null)
+                return await ExtractTextAsync(file);
+
+            throw new ArgumentException("Either text or file input must be provided.");
+        }
+
+
+        /*HELPER METHODS*/
+        
+
         public async Task<string> ExtractTextAsync(IFormFile file)
         {
             if (file == null)
@@ -31,20 +47,6 @@ namespace Infrastructure.Services
             };
         }
 
-        public async Task<string> GetTextAsync(string? text, IFormFile? file)
-        {
-            if (!string.IsNullOrWhiteSpace(text))
-                return text;
-
-            if (file != null)
-                return await ExtractTextAsync(file);
-
-            throw new ArgumentException("Either text or file input must be provided.");
-        }
-
-
-
-        /*HELPER METHODS*/
 
         private async Task<string> ExtractTextFromPdfAsync(Stream stream)
         {
