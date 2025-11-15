@@ -21,17 +21,31 @@ namespace WebAPI.Controllers
         [HttpPost("start")]
         public async Task<IActionResult> StartInterview([FromForm] InterviewStartRequestDto interviewRequestDto)
         {
-            var result = await _interviewService.StartInterviewAsync(interviewRequestDto);
-            return Ok(result);
+            try
+            {
+                var result = await _interviewService.StartInterviewAsync(interviewRequestDto);
+                return Ok(result);
+                
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
         }
 
         [HttpPost("evaluate")]
         public async Task<IActionResult> EvaluateInterview([FromBody] List<InterviewEvaluationRequestDto> responses)
         {
-            var result = await _interviewService.EvaluateInterviewAsync(
-                responses
-            );
-            return Ok(result);
+            try
+            {
+                var result = await _interviewService.EvaluateInterviewAsync(responses);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
+            
         }
     }
 

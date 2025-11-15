@@ -19,8 +19,16 @@ namespace API.Controllers
         [HttpPost("generate")]
         public async Task<IActionResult> Generate([FromForm] ApplicationRequestDto request)
         {
-            var result = await _applicationService.GenerateApplication(request);
-            return Ok(result);
+            try
+            {
+                var result = await _applicationService.GenerateApplication(request);
+                return Ok(result);
+                
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
         }
     }
 

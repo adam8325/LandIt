@@ -8,6 +8,6 @@ namespace Application.Interfaces.IAIService
     {
         Task<ApplicationResponseDto> GenerateApplicationAsync(string cv, string jobPosting);
         Task<InterviewStartResponseDto> GenerateInterviewAsync(string cvText, string jobPostingText);
-        Task<InterviewEvaluationResultDto> EvaluateInterviewAsync(List<InterviewEvaluationRequestDto> responeses);
+        Task<InterviewEvaluationResultDto> EvaluateInterviewAsync(List<InterviewEvaluationRequestDto> responses);
     }
 }
