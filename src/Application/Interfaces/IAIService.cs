@@ -9,6 +9,7 @@ namespace Application.Interfaces.IAIService
     {
         Task<GeneratedApplicationDto> GenerateApplicationAsync(UserDocumentDto dto);
         Task<GeneratedInterviewDto> GenerateInterviewAsync(UserDocumentDto dto);
+        Task<string> TranscribeAudioAsync(Stream audioStream);
         Task<EvaluationSummaryDto> EvaluateInterviewAsync(List<UserAnswerDto> responses);
     }
 }

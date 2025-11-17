@@ -51,6 +51,24 @@ namespace Infrastructure.Services
             return parsedContent;
         }
 
+        public async Task<string> TranscribeAudioAsync(Stream audioStream)
+        {
+            using var content = new MultipartFormDataContent();
+            content.Add(new StreamContent(audioStream), "file", "answer.wav");
+            content.Add(new StringContent("whisper-1"), "model");
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/audio/transcriptions");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+            request.Content = content;
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadFromJsonAsync<JsonDocument>();
+            return json?.RootElement.GetProperty("text").GetString() ?? "";
+        }
+
+
          public async Task<EvaluationSummaryDto> EvaluateInterviewAsync(List<UserAnswerDto> responses)
         {
             var formattedAnswers = string.Join("\n", responses.Select(r => $"Spørgsmål: {r.Question}\nSvar: {r.Answer}\n"));

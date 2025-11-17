@@ -35,6 +35,12 @@ namespace Application.Services
             return aiResponse;
         }
 
+        public async Task<string> TranscribeAnswerAsync(IFormFile audioFile)
+        {
+            using var stream = audioFile.OpenReadStream();
+            return await _aiService.TranscribeAudioAsync(stream);
+        }
+
 
         public async Task<EvaluationSummaryDto> EvaluateInterviewAsync(List<UserAnswerDto> responses)
         {

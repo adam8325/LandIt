@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Copy, Check, Mic } from "lucide-react";
+import { Copy, Check, Mic, Square } from "lucide-react";
 import AnimatedSalary from "./AnimatedSalary";
 import { scrollbarStyle } from "./ScrollbarStyle";
 import type { InterviewEvaluationResult } from "../Models/InterviewModels";
+import { useVoiceRecorder } from "../Hooks/useVoiceRecorder";
+import { interviewService } from "../AIService/InterviewService";
 
 interface InterviewSimulationProps {
   questions: string[];
@@ -18,22 +20,34 @@ interface InterviewSimulationProps {
 }
 
 export default function InterviewSimulation({
-  questions,
-  introduction,
-  onNewTry,
-  salaryOutput,
-  elevatorOutput,
-  onEvaluate,
-  answers,
-  setAnswers,
-  evaluations,
-  evaluationCompleted,
-}: InterviewSimulationProps) {
+    questions,
+    introduction,
+    onNewTry,
+    salaryOutput,
+    elevatorOutput,
+    onEvaluate,
+    answers,
+    setAnswers,
+    evaluations,
+    evaluationCompleted,
+  }: InterviewSimulationProps) {
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
   const currentQuestion = questions[currentIndex];
+
+  const { isRecording, startRecording, stopRecording } = useVoiceRecorder();  
+
+  async function handleStopRecording() {
+  const audioFile = await stopRecording();
+
+  const text = await interviewService.transcribeVoice(audioFile);
+
+  const newAnswers = [...answers];
+  newAnswers[currentIndex] = text;
+  setAnswers(newAnswers);
+}
 
   const handleNext = () => {
     if (currentIndex < questions.length - 1) setCurrentIndex(currentIndex + 1);
@@ -104,10 +118,24 @@ export default function InterviewSimulation({
                     setAnswers(newAnswers);
                 }}
               />
-              {/* Placeholder for future voice recording button */}
-              <button className="flex items-center justify-center gap-2 py-1 px-2 sm:py-2 sm:px-3  bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white">
-                <Mic className="w-5 h-5"/> Indtal svar
-              </button>
+              {/* Voice recording button */}
+              {!isRecording ? (
+                <button
+                  onClick={startRecording}
+                  className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md cursor-pointer"
+                >
+                  <Mic className="w-5 h-5 animate-pulse" />
+                  Start optagelse
+                </button>
+              ) : (
+                <button
+                  onClick={handleStopRecording}
+                  className="flex items-center justify-center gap-2 px-3 py-2 bg-red-600 text-white rounded-md cursor-pointer"
+                >
+                  <Square className="w-5 h-5" />
+                  Stop & transskriber
+                </button>
+              )}
             </div>
 
           {/* Navigation */}

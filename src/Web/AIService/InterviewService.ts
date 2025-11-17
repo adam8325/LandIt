@@ -3,6 +3,7 @@ import type { InterviewEvaluationRequest, InterviewEvaluationResult, InterviewSt
 
 const INTERVIEW_START_URL = "https://localhost:7131/api/Interview/start";
 const INTERVIEW_EVALUATE_URL = "https://localhost:7131/api/Interview/evaluate";
+const INTERVIEW_TRANSCRIBE_URL = "https://localhost:7131/api/Interview/transcribe";
 
 export const interviewService = {
     async generateQuestions(data: InterviewStartRequest):
@@ -25,8 +26,19 @@ export const interviewService = {
     Promise<InterviewEvaluationResult> {
         const response = await axios.post<InterviewEvaluationResult>(INTERVIEW_EVALUATE_URL, data);
         return response.data;
-    }
+    },
 
+    async transcribeVoice(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append("audioFile", file);
+
+    const response = await axios.post<{ text: string }>(INTERVIEW_TRANSCRIBE_URL,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    return response.data.text;
+}
 
 }
 

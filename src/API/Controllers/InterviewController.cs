@@ -33,6 +33,23 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpPost("transcribe")]
+        public async Task<IActionResult> TranscribeInterviewAnswer([FromForm] IFormFile audioFile)
+        {
+            if (audioFile == null)
+                return BadRequest("Ingen lydfil sendt");
+
+            try
+            {
+                var transcription = await _interviewService.TranscribeAnswerAsync(audioFile);
+                return Ok(new { text = transcription });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
+        }
+
         [HttpPost("evaluate")]
         public async Task<IActionResult> EvaluateInterview([FromBody] List<UserAnswerDto> responses)
         {
