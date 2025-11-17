@@ -343,6 +343,7 @@
                     introduction={introductionOutput}
                     salaryOutput={salaryOutput}
                     elevatorOutput={elevatorOutput}
+                    isLoading={isLoading}
                     onEvaluate={handleInterview}
                     evaluations={interviewEvaluations}
                     evaluationCompleted={evaluationCompleted}

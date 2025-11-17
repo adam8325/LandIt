@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Copy, Check, Mic, Square } from "lucide-react";
+import { Copy, Check, Mic, Square, Loader2 } from "lucide-react";
 import AnimatedSalary from "./AnimatedSalary";
 import { scrollbarStyle } from "./ScrollbarStyle";
 import type { InterviewEvaluationResult } from "../Models/InterviewModels";
@@ -14,6 +14,7 @@ interface InterviewSimulationProps {
   introduction: string;
   salaryOutput: string;
   elevatorOutput: string;
+  isLoading: boolean;
   onEvaluate: () => void;
   evaluations: InterviewEvaluationResult;
   evaluationCompleted: boolean;
@@ -25,6 +26,7 @@ export default function InterviewSimulation({
     onNewTry,
     salaryOutput,
     elevatorOutput,
+    isLoading,
     onEvaluate,
     answers,
     setAnswers,
@@ -66,6 +68,8 @@ export default function InterviewSimulation({
   const handleNewTry = () => {
     onNewTry()
   }
+
+
 
 
   const isLastQuestion = currentIndex === questions.length - 1;
@@ -122,17 +126,18 @@ export default function InterviewSimulation({
               {!isRecording ? (
                 <button
                   onClick={startRecording}
-                  className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md cursor-pointer"
+                  disabled={isLoading}
+                  className={`flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] rounded-md ${isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                 >
                   <Mic className="w-5 h-5 animate-pulse" />
-                  Start optagelse
+                  Indtal svar
                 </button>
               ) : (
                 <button
                   onClick={handleStopRecording}
-                  className="flex items-center justify-center gap-2 px-3 py-2 bg-red-600 text-white rounded-md cursor-pointer"
+                  className="flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] rounded-md cursor-pointer"
                 >
-                  <Square className="w-5 h-5" />
+                  <Square className="w-5 h-5 text-red-500 animate-pulse" fill="currentColor" />
                   Stop & transskriber
                 </button>
               )}
@@ -142,8 +147,8 @@ export default function InterviewSimulation({
           <div className="flex justify-between h-1/13">
             <button
               onClick={handlePrev}
-              disabled={currentIndex === 0}
-              className="cursor-pointer py-2 px-4 bg-slate-800 rounded-md text-sm disabled:opacity-40"
+              disabled={currentIndex === 0 || isLoading}
+              className={`cursor-pointer py-2 px-4 bg-slate-800 rounded-md text-sm disabled:opacity-40 ${isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
             >
               Forrige
             </button>
@@ -151,16 +156,19 @@ export default function InterviewSimulation({
             {!isLastQuestion ? (
               <button
                 onClick={handleNext}
-                className="py-1 px-2 sm:py-2 sm:px-3  bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white"
+                disabled = {!answers[currentIndex]}
+                className={`py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] ${answers[currentIndex] ? "cursor-pointer" : "opacity-50 cursor-not-allowed"}`}
               >
                 Næste
               </button>
             ) : (
               <button
                 onClick={onEvaluate}
-                className="py-1 px-2 sm:py-2 sm:px-3  bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white"
+                disabled = {!answers[currentIndex]}
+                className={`py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white ${answers[currentIndex] ? "cursor-pointer" : "opacity-50 cursor-not-allowed"}`}
               >
-                Evaluér Interview
+                {isLoading && <Loader2 className="animate-spin h-5 w-5 text-blue-700" />}
+                {isLoading ? "Evaluering igang..." : "Evaluér Interview"}
               </button>
             )}
           </div>
