@@ -17,7 +17,7 @@ export function useVoiceRecorder() {
     };
 
     mediaRecorderRef.current = mediaRecorder;
-    chunksRef.current = [];
+    chunksRef.current = []; 
 
     mediaRecorder.start();
     setIsRecording(true);
