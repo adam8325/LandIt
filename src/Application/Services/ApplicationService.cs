@@ -18,7 +18,7 @@ namespace Application.Services.ApplicationService
             _aiService = aiService;
         }
 
-        public async Task<ApplicationResponseDto> GenerateApplication(UserDocumentDto dto)
+        public async Task<GeneratedApplicationDto> GenerateApplication(UserDocumentDto dto)
         {
 
             if (dto.CvFile != null)

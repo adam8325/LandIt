@@ -6,6 +6,6 @@ namespace Application.Interfaces.IApplicationService
 {
     public interface IApplicationService
     {
-        Task<ApplicationResponseDto> GenerateApplication(UserDocumentDto request);
+        Task<GeneratedApplicationDto> GenerateApplication(UserDocumentDto request);
     }
 }

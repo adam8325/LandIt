@@ -1,6 +1,6 @@
 namespace Application.DTOs.ApplicationResponse
 {
-    public class ApplicationResponseDto
+    public class GeneratedApplicationDto
     {
         public string ApplicationText { get; set; } = "";
         public string EmailDraft { get; set; } = "";

@@ -7,7 +7,7 @@ namespace Application.Interfaces.IAIService
 {
     public interface IAIService
     {
-        Task<ApplicationResponseDto> GenerateApplicationAsync(UserDocumentDto dto);
+        Task<GeneratedApplicationDto> GenerateApplicationAsync(UserDocumentDto dto);
         Task<GeneratedInterviewDto> GenerateInterviewAsync(UserDocumentDto dto);
         Task<EvaluationSummaryDto> EvaluateInterviewAsync(List<UserAnswerDto> responses);
     }

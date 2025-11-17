@@ -25,7 +25,7 @@ namespace Infrastructure.Services
             _apiKey = config["OpenAI:ApiKey"] ?? throw new ArgumentNullException("OpenAI API key not configured");
         }
 
-        public async Task<ApplicationResponseDto> GenerateApplicationAsync(UserDocumentDto dto)
+        public async Task<GeneratedApplicationDto> GenerateApplicationAsync(UserDocumentDto dto)
         {
             
             var prompt = ApplicationPrompt.GetApplicationPrompt(dto.CvText!, dto.JobPostingText!);
@@ -33,8 +33,8 @@ namespace Infrastructure.Services
             var content = await CallOpenAiAsync(prompt);
             content = CleanJsonString(content);
 
-            var parsedContent = JsonSerializer.Deserialize<ApplicationResponseDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-                         ?? new ApplicationResponseDto();
+            var parsedContent = JsonSerializer.Deserialize<GeneratedApplicationDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                         ?? new GeneratedApplicationDto();
 
             return parsedContent;
         }
