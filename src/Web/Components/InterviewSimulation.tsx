@@ -81,10 +81,10 @@ export default function InterviewSimulation({
   }, [showQuestionDetail, focusedQuestionIndex]);
 
   return (
-    <div className="flex items-center justify-between gap-10 w-full h-full rounded-lg text-white">
+    <div className="flex sm:flex-row flex-col items-center justify-between gap-10 w-full h-full rounded-lg text-white">
 
       {/* LEFT SIDE */}
-      <section className="flex flex-col items-center rounded-lg w-1/3 h-140 bg-gradient-to-b from-gray-900 via-transparent to-gray-900 border border-cyan-950 p-4 gap-7">
+      <section className="order-2 flex flex-col items-center rounded-lg w-full sm:w-1/3 h-140 bg-gradient-to-b from-gray-900 via-transparent to-gray-900 border border-cyan-950 p-4 gap-7">
         <div className="text-center flex flex-col items-center gap-4">
           <h4 className="text-lg sm:text-2xl font-semibold">Forventet Løn</h4>
           <AnimatedSalary salary={salaryOutput} />
@@ -109,7 +109,7 @@ export default function InterviewSimulation({
       </section>
 
       {/* RIGHT SIDE */}
-      <section className="flex flex-col gap-4 rounded-lg w-2/3 h-140 bg-gradient-to-b from-gray-900 via-transparent to-gray-900 border border-cyan-950 p-4">
+      <section className="order-1 flex flex-col gap-4 rounded-lg w-full sm:w-2/3 h-140 bg-gradient-to-b from-gray-900 via-transparent to-gray-900 border border-cyan-950 p-4">
 
         {/* 1) INTERVIEW VIEW */}
         {!evaluationCompleted && !showQuestionDetail && (
@@ -118,7 +118,7 @@ export default function InterviewSimulation({
               <h4 className="text-lg sm:text-2xl font-semibold text-left">
                 Spørgsmål {currentIndex + 1} / {questions.length}
               </h4>
-              <label className="text-md text-left font-semibold text-blue-400">
+              <label className="text-sm sm:text-md text-left font-semibold text-blue-400">
                 {questions[currentIndex]}
               </label>
             </div>
@@ -199,7 +199,7 @@ export default function InterviewSimulation({
               Spørgsmål {focusedQuestionIndex! + 1} / {questions.length}
             </h4>
 
-            <p className="text-md font-semibold text-blue-400">
+            <p className="text-md text-left font-semibold text-blue-400">
               {questions[focusedQuestionIndex!]}
             </p>
 
@@ -239,33 +239,33 @@ export default function InterviewSimulation({
               {evaluations.evaluations.map((ev, i) => (
                 <div
                   key={i}
-                  className="grid grid-cols-[0.1fr_1fr_0.1fr] items-center"
+                  className="grid grid-cols-[0.1fr_1fr_0.1fr] items-start"
                 >
                   <button
                     onClick={() => {
                       setFocusedQuestionIndex(i);
                       setShowQuestionDetail(true);
                     }}
-                    className="cursor-pointer text-xs font-semibold text-white bg-gradient-to-b 
+                    className="cursor-pointer text-[11px] sm:text-xs font-semibold text-white bg-gradient-to-b 
                     from-gray-800 via-transparent to-gray-800 rounded-sm mr-6 py-1 hover:bg-gray-700"
                   >
                     {i + 1}/{questions.length}
                   </button>
 
-                  <p className="text-xs text-left text-gray-200">{ev.feedback}</p>
-                  <p className="text-xs text-yellow-400 ml-auto">⭐ {ev.rating}/5</p>
+                  <p className="text-[11px] sm:text-xs text-left text-gray-200">{ev.feedback}</p>
+                  <p className="text-[11px] sm:text-xs text-yellow-400 ml-auto">⭐ {ev.rating}/5</p>
                 </div>
               ))}
             </div>
 
-            <div className="grid grid-cols-3 items-center px-2 justify-between">
-              <p></p>
-              <p className="font-semibold text-lg sm:text-2xl text-center">Samlet vurdering</p>
-              <p className="text-yellow-400 text-center text-xl ml-auto">
+            <div className="sm:grid grid-cols-3 grid grid-cols-[0.3fr_1fr_0.3fr] items-center px-2 justify-between">
+              <p className="truncate"></p>
+              <p className="font-semibold text-md sm:text-2xl text-center whitespace-nowrap">Samlet vurdering</p>
+              <p className="text-yellow-400 text-center text-md sm:text-xl ml-auto">
                 ⭐ {evaluations.averageRating}/5
               </p>                        
             </div>
-             <p className="text-gray-300 text-sm text-center">
+             <p className="text-gray-300 text-xs sm:text-sm text-center">
                 {evaluations.overallFeedback}
               </p>   
             <button

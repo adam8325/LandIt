@@ -1,4 +1,3 @@
-// components/FileInputSection.tsx
 import React from 'react';
 import { X, FileText, Upload } from 'lucide-react';
 import { scrollbarStyle } from './ScrollbarStyle';
@@ -31,7 +30,7 @@ export function FileInputSection({
   placeholder,
 }: FileInputSectionProps) {
   return (
-    <section className="w-1/2 flex flex-col bg-gradient-to-b from-gray-900 via-transparent to-gray-900 border border-cyan-950 px-4 py-2 text-center gap-3 rounded-lg">
+    <section className="sm:w-1/2 flex flex-col bg-gradient-to-b from-gray-900 via-transparent to-gray-900 border border-cyan-950 px-4 py-2 text-center gap-3 rounded-lg">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
@@ -56,7 +55,7 @@ export function FileInputSection({
           <p className="font-semibold text-sm sm:text-md text-gray-300">
             Klik for at uploade {title}
           </p>
-          <div className="p-2 flex items-center justify-center gap-2">
+          <div className="p-2 flex items-center justify-center gap-2 min-w-70">
             <p className="text-gray-500 text-xs sm:text-sm">
               {file ? file.name : "Understøttede formater: PDF, DOC, DOCX"}
             </p>

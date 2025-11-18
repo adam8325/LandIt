@@ -97,17 +97,17 @@ export default function InterviewPage() {
     isLoading;
 
   return (
-    <div className="bg-slate-950 py-6 px-8 w-full min-h-screen">
-      <div className="w-3/4 flex flex-col items-center justify-center text-center text-white gap-10 mx-auto">
-        <div className="grid grid-cols-3 w-full">
+    <div className="bg-slate-950 py-4 sm:py-6 px-6 sm:px-8 min-h-screen w-full">
+      <div className="sm:w-3/4 flex flex-col items-center justify-center text-center text-white gap-10 sm:mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-3 w-full">
           <Link
             to="/"
-            className="place-self-start mr-auto btn py-1 px-2 rounded-lg font-semibold text-xs flex items-center justify-center gap-2 hover:border hover:border-blue-400 hover:bg-sky-900 transition-colors"
+            className="place-self-start mr-auto btn py-1 px-2 rounded-lg font-semibold text-xs flex items-center justify-center hover:border hover:border-blue-400 hover:bg-sky-900 transition-colors"
           >
-            <span className="text-white">Hjem</span>
+            <span className="text-white mb-4">Hjem</span>
           </Link>
           <section className="flex flex-col items-center justify-center">
-            <h1 className="font-bold mb-2 text-4xl pb-1 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
+            <h1 className="font-bold mb-2 sm:text-4xl text-2xl pb-1 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
               {!isCompleted ? "Øv dig til samtalen" : "Interview Simulator"}
             </h1>
             <p className="text-gray-300 text-sm">
