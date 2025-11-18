@@ -8,7 +8,7 @@ import InterviewSimulation from "../Components/InterviewSimulation";
 import type { InterviewEvaluationResult } from "../Models/InterviewModels";
 
 export default function InterviewPage() {   
-  // File input hooks - samme pattern som ApplicationPage!
+  // File input hooks
   const cvInput = useFileInput();
   const jobInput = useFileInput();
 
@@ -97,9 +97,8 @@ export default function InterviewPage() {
     isLoading;
 
   return (
-    <div className="bg-slate-950 p-8 w-full min-h-screen">
+    <div className="bg-slate-950 py-6 px-8 w-full min-h-screen">
       <div className="w-3/4 flex flex-col items-center justify-center text-center text-white gap-10 mx-auto">
-        {/* Header */}
         <div className="grid grid-cols-3 w-full">
           <Link
             to="/"
@@ -119,7 +118,6 @@ export default function InterviewPage() {
 
         {!isCompleted ? (
           <>
-            {/* Same DRY input sections! */}
             <div className="w-full flex flex-col sm:flex-row items-center gap-10">
               <FileInputSection
                 title="CV"
@@ -155,7 +153,7 @@ export default function InterviewPage() {
               </div>
             )}
 
-            <div className="mt-6 flex gap-4">
+            <div className="flex gap-4">
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitDisabled}

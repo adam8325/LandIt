@@ -9,7 +9,7 @@ import { useFileInput } from "../Hooks/useFileInput";
 import { FileInputSection } from "../Components/FileInputSection";
 
 export default function ApplicationPage() {
-  // File input hooks - clean og DRY!
+  // File input hooks
   const cvInput = useFileInput();
   const jobInput = useFileInput();
 
@@ -95,9 +95,8 @@ export default function ApplicationPage() {
     isLoading;
 
   return (
-    <div className="bg-slate-950 p-8 min-h-screen w-full">
+    <div className="bg-slate-950 py-6 px-8 min-h-screen w-full">
       <div className="w-3/4 flex flex-col items-center justify-center text-center text-white gap-10 mx-auto">
-        {/* Header */}
         <div className="grid grid-cols-3 w-full">
           <Link
             to="/"
@@ -117,7 +116,6 @@ export default function ApplicationPage() {
 
         {!isCompleted ? (
           <>
-            {/* Input Sections - DRY med komponenter! */}
             <div className="w-full flex flex-col sm:flex-row items-center gap-10">
               <FileInputSection
                 title="CV"
@@ -147,15 +145,13 @@ export default function ApplicationPage() {
               />
             </div>
 
-            {/* Error Display */}
             {error && (
               <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-red-600 text-sm">{error}</p>
               </div>
             )}
 
-            {/* Submit Button */}
-            <div className="mt-6 flex gap-4">
+            <div className="flex gap-4">
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitDisabled}
@@ -201,7 +197,6 @@ export default function ApplicationPage() {
                             isLoading ? "opacity-50 cursor-not-allowed" : ""
                         }`}                        
                         value={mailOutput}        
-                        // onChange={(e) => setCvText(e.target.value)}
                         disabled={isLoading}
                         />
                         <button
@@ -223,7 +218,6 @@ export default function ApplicationPage() {
                             isLoading ? "opacity-50 cursor-not-allowed" : ""
                         }`}             
                         value={applicationOutput}
-                        // onChange={(e) => setCvText(e.target.value)}
                         disabled={isLoading}
                     />
                     <div className='flex items-center justify-between gap-2'>
