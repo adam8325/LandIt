@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Copy, Check, Mic, Square, Loader2 } from "lucide-react";
 import AnimatedSalary from "./AnimatedSalary";
-import { scrollbarStyle } from "./ScrollbarStyle";
+import { scrollbarStyle } from "./Ui/ScrollbarStyle";
 import type { InterviewEvaluationResult } from "../Models/InterviewModels";
 import { useVoiceRecorder } from "../Hooks/useVoiceRecorder";
 import { interviewService } from "../AIService/InterviewService";
+import StarRating from "./Ui/StarRating";
 
 interface InterviewSimulationProps {
   questions: string[];
@@ -118,7 +119,7 @@ export default function InterviewSimulation({
               <h4 className="text-lg sm:text-2xl font-semibold text-left">
                 Spørgsmål {currentIndex + 1} / {questions.length}
               </h4>
-              <label className="text-sm sm:text-md text-left font-semibold text-blue-400">
+              <label className="text-sm sm:text-[16px] text-left font-semibold text-blue-400">
                 {questions[currentIndex]}
               </label>
             </div>
@@ -252,8 +253,8 @@ export default function InterviewSimulation({
                     {i + 1}/{questions.length}
                   </button>
 
-                  <p className="text-[11px] sm:text-xs text-left text-gray-200">{ev.feedback}</p>
-                  <p className="text-[11px] sm:text-xs text-yellow-400 ml-auto">⭐ {ev.rating}/5</p>
+                  <p className="text-[11px] sm:text-xs text-left text-gray-200 mr-1">{ev.feedback}</p>
+                  <StarRating size={10} rating={ev.rating} />
                 </div>
               ))}
             </div>
@@ -261,9 +262,7 @@ export default function InterviewSimulation({
             <div className="sm:grid grid-cols-3 grid grid-cols-[0.3fr_1fr_0.3fr] items-center px-2 justify-between">
               <p className="truncate"></p>
               <p className="font-semibold text-md sm:text-2xl text-center whitespace-nowrap">Samlet vurdering</p>
-              <p className="text-yellow-400 text-center text-md sm:text-xl ml-auto">
-                ⭐ {evaluations.averageRating}/5
-              </p>                        
+               <StarRating size={18} rating={evaluations.averageRating} />                                
             </div>
              <p className="text-gray-300 text-xs sm:text-sm text-center">
                 {evaluations.overallFeedback}

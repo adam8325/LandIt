@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, FileText, Upload } from 'lucide-react';
-import { scrollbarStyle } from './ScrollbarStyle';
+import { scrollbarStyle } from './Ui/ScrollbarStyle';
 
 interface FileInputSectionProps {
   title: string;

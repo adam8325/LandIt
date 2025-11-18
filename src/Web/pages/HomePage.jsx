@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import SparklesPreview from "../components/SparklesPreview";
+import SparklesPreview from "../Components/Ui/SparklesPreview";
 import { Link2, Search, Zap, TrendingUp, Rocket } from "lucide-react";
 
 export default function HomePage() {

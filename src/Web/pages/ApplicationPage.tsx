@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Copy, Download, Check, Loader2 } from "lucide-react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import { applicationService } from "../AIService/ApplicationService";
-import { scrollbarStyle } from "../Components/ScrollbarStyle";
+import { scrollbarStyle } from "../Components/Ui/ScrollbarStyle";
 import { useFileInput } from "../Hooks/useFileInput";
 import { FileInputSection } from "../Components/FileInputSection";
 
@@ -102,7 +102,7 @@ export default function ApplicationPage() {
             to="/"
             className="place-self-start mr-auto btn py-1 px-2 rounded-lg font-semibold text-xs flex items-center justify-center hover:border hover:border-blue-400 hover:bg-sky-900 transition-colors"
           >
-            <span className="text-white mb-4">Hjem</span>
+            <span className="text-white mb-4 sm:mb-0">Hjem</span>
           </Link>
           <section className="flex flex-col items-center justify-center">
             <h1 className="font-bold mb-2 sm:text-4xl text-2xl pb-1 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
