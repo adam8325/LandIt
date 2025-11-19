@@ -11,24 +11,21 @@ namespace Application.Services.ApplicationService
     {
         private readonly IFileProcessing _fileProcessing;
         private readonly IAIService _aiService;
+        private readonly UserDocumentDtoValidator _validator;
 
         public ApplicationService(IFileProcessing fileProcessing, IAIService aiService)
         {
             _fileProcessing = fileProcessing;
             _aiService = aiService;
+            _validator = new UserDocumentDtoValidator();
         }
 
         public async Task<GeneratedApplicationDto> GenerateApplication(UserDocumentDto dto)
         {
-
-            if (dto.CvFile != null)
+            var validationResult = await _validator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
             {
-                dto.CvText = await _fileProcessing.GetTextAsync(dto.CvText, dto.CvFile);
-            }
-            
-            if (dto.JobPostingFile != null)
-            {
-                dto.JobPostingText = await _fileProcessing.GetTextAsync(dto.JobPostingText, dto.JobPostingFile);
+                 throw new FluentValidation.ValidationException(validationResult.Errors);
             }
 
             return await _aiService.GenerateApplicationAsync(dto);

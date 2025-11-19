@@ -11,32 +11,36 @@ namespace Application.Services
     {
         private readonly IAIService _aiService;
         private readonly IFileProcessing _fileProcessing;
+        private readonly UserDocumentDtoValidator _validator;
+        private readonly UserAnswerDtoValidator _answerValidator;
 
         public InterviewService(IAIService aiService, IFileProcessing fileProcessing)
         {
             _aiService = aiService;
             _fileProcessing = fileProcessing;
+            _validator = new UserDocumentDtoValidator();
+            _answerValidator = new UserAnswerDtoValidator();
         }
 
         public async Task<GeneratedInterviewDto> StartInterviewAsync(UserDocumentDto dto)
         {
-            if (dto.CvFile != null)
+            var validationResult = await _validator.ValidateAsync(dto);
+            if (!validationResult.IsValid)
             {
-                dto.CvText = await _fileProcessing.GetTextAsync(dto.CvText, dto.CvFile);
-            }
-                
-            if (dto.JobPostingFile != null)
-            {
-                dto.JobPostingText = await _fileProcessing.GetTextAsync(dto.JobPostingText, dto.JobPostingFile);
+                 throw new FluentValidation.ValidationException(validationResult.Errors);
             }
 
             var aiResponse = await _aiService.GenerateInterviewAsync(dto);
 
-            return aiResponse;
+            return aiResponse;            
         }
 
         public async Task<string> TranscribeAnswerAsync(IFormFile audioFile)
         {
+            if (audioFile == null || audioFile.Length == 0)
+            {
+                throw new ArgumentException("Audio file is null or empty");
+            }
             using var stream = audioFile.OpenReadStream();
             return await _aiService.TranscribeAudioAsync(stream);
         }
@@ -44,8 +48,15 @@ namespace Application.Services
 
         public async Task<EvaluationSummaryDto> EvaluateInterviewAsync(List<UserAnswerDto> responses)
         {
-            // validate / sanitize if needed, then hand off to infrastructure AI service
-            // (infrastructure builds prompt and returns parsed InterviewEvaluationResultDto)
+            foreach (var response in responses)
+            {
+                var validationResult = await _answerValidator.ValidateAsync(response);
+                if (!validationResult.IsValid)
+                {
+                    throw new FluentValidation.ValidationException(validationResult.Errors);
+                }
+            }
+            
             var result = await _aiService.EvaluateInterviewAsync(responses);
             return result;
         }

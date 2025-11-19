@@ -35,10 +35,10 @@ export default function InterviewSimulation({
   evaluations,
   evaluationCompleted,
 }: InterviewSimulationProps) {
+
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
-  // NEW: Pure question detail view
   const [showQuestionDetail, setShowQuestionDetail] = useState(false);
   const [focusedQuestionIndex, setFocusedQuestionIndex] = useState<number | null>(null);
 
@@ -167,14 +167,14 @@ export default function InterviewSimulation({
               {!isLastQuestion ? (
                 <ButtonStyles
                   onClick={handleNext}
-                  disabled={!answers[currentIndex]}
+                  disabled={!answers[currentIndex]?.trim()}
                 >
                   Næste
                 </ButtonStyles>
               ) : (
                 <ButtonStyles
                   onClick={onEvaluate}
-                  disabled={!answers[currentIndex]}
+                  disabled={!answers[currentIndex]?.trim()}
                 >
                   {isLoading && <Loader2 className="animate-spin h-5 w-5 text-blue-700" />}
                   {isLoading ? "Evaluering igang..." : "Evaluér Interview"}

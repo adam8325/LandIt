@@ -36,9 +36,6 @@ namespace WebAPI.Controllers
         [HttpPost("transcribe")]
         public async Task<IActionResult> TranscribeInterviewAnswer([FromForm] IFormFile audioFile)
         {
-            if (audioFile == null)
-                return BadRequest("Ingen lydfil sendt");
-
             try
             {
                 var transcription = await _interviewService.TranscribeAnswerAsync(audioFile);
