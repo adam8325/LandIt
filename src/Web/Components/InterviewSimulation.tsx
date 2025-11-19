@@ -6,6 +6,7 @@ import type { InterviewEvaluationResult } from "../Models/InterviewModels";
 import { useVoiceRecorder } from "../Hooks/useVoiceRecorder";
 import { interviewService } from "../AIService/InterviewService";
 import StarRating from "./Ui/StarRating";
+import ButtonStyles from "./Ui/ButtonStyles";
 
 interface InterviewSimulationProps {
   questions: string[];
@@ -98,14 +99,12 @@ export default function InterviewSimulation({
             value={elevatorOutput}
             readOnly
           />
-          <button
+          <ButtonStyles
             onClick={handleCopy}
-            className="py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex 
-            items-center justify-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md"
           >
             {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             {isCopied ? "Kopieret" : "Kopiér"}
-          </button>
+          </ButtonStyles>
         </div>
       </section>
 
@@ -139,55 +138,47 @@ export default function InterviewSimulation({
 
               {/* Voice recording */}
               {!isRecording ? (
-                <button
+                <ButtonStyles
                   onClick={startRecording}
                   disabled={isLoading}
-                  className="cursor-pointer flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r 
-                  from-blue-400 via-blue-500 to-blue-600 font-semibold text-white text-xs sm:text-sm rounded-md"
                 >
                   <Mic className="w-5 h-5 animate-pulse" /> Indtal svar
-                </button>
+                </ButtonStyles>
               ) : (
-                <button
+                <ButtonStyles
                   onClick={handleStopRecording}
-                  className="cursor-pointer flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r 
-                  from-blue-400 via-blue-500 to-blue-600 font-semibold text-white text-xs sm:text-sm rounded-md"
                 >
                   <Square className="w-5 h-5 text-red-500 animate-pulse" fill="currentColor" />
                   Stop & transskriber
-                </button>
+                </ButtonStyles>
               )}
             </div>
 
             {/* Navigation */}
             <div className="flex justify-between h-1/13">
-              <button
+              <ButtonStyles
                 onClick={handlePrev}
                 disabled={currentIndex === 0}
-                className="cursor-pointer py-2 px-4 bg-slate-800 rounded-md text-sm disabled:opacity-40"
+                variant="secondary"
               >
                 Forrige
-              </button>
+              </ButtonStyles>
 
               {!isLastQuestion ? (
-                <button
+                <ButtonStyles
                   onClick={handleNext}
                   disabled={!answers[currentIndex]}
-                  className="cursor-pointer py-2 px-4 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 rounded-md 
-                  text-white disabled:opacity-50"
                 >
                   Næste
-                </button>
+                </ButtonStyles>
               ) : (
-                <button
+                <ButtonStyles
                   onClick={onEvaluate}
                   disabled={!answers[currentIndex]}
-                  className="cursor-pointer py-2 px-4 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 rounded-md 
-                  text-white disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {isLoading && <Loader2 className="animate-spin h-5 w-5 text-blue-700" />}
                   {isLoading ? "Evaluering igang..." : "Evaluér Interview"}
-                </button>
+                </ButtonStyles>
               )}
             </div>
           </>
@@ -213,19 +204,18 @@ export default function InterviewSimulation({
 
             {/* Buttons bottom */}
             <div className="mt-auto flex gap-4">
-              <button
+              <ButtonStyles
                 onClick={() => setShowQuestionDetail(false)}
-                className="cursor-pointer py-2 px-3 bg-blue-600 rounded-md text-white"
               >
-                Se evaluering
-              </button>
+                Evaluering
+              </ButtonStyles>
 
-              <button
+              <ButtonStyles
                 onClick={handleNewTry}
-                className="cursor-pointer py-2 px-3 bg-gray-700 rounded-md text-white"
+                variant= "secondary"
               >
                 Prøv igen
-              </button>
+              </ButtonStyles>
             </div>
           </div>
         )}
@@ -262,17 +252,16 @@ export default function InterviewSimulation({
             <div className="sm:grid grid-cols-3 grid grid-cols-[0.3fr_1fr_0.3fr] items-center px-2 justify-between">
               <p className="truncate"></p>
               <p className="font-semibold text-md sm:text-2xl text-center whitespace-nowrap">Samlet vurdering</p>
-               <StarRating size={18} rating={evaluations.averageRating} />                                
+               <StarRating size={18} rating={evaluations.averageRating} className="ml-auto" />                                
             </div>
              <p className="text-gray-300 text-xs sm:text-sm text-center">
                 {evaluations.overallFeedback}
               </p>   
-            <button
+            <ButtonStyles                
                 onClick={handleNewTry}
-                className="cursor-pointer py-2 px-4 bg-blue-600 rounded-md text-white"
               >
                 Prøv igen
-            </button>
+            </ButtonStyles>
 
           </div>
             

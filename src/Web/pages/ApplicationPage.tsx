@@ -7,6 +7,7 @@ import { applicationService } from "../AIService/ApplicationService";
 import { scrollbarStyle } from "../Components/Ui/ScrollbarStyle";
 import { useFileInput } from "../Hooks/useFileInput";
 import { FileInputSection } from "../Components/FileInputSection";
+import ButtonStyles from "../Components/Ui/ButtonStyles";
 
 export default function ApplicationPage() {
   // File input hooks
@@ -199,12 +200,10 @@ export default function ApplicationPage() {
                       value={mailOutput}        
                       disabled={isLoading}
                       />
-                      <button
-                          onClick={copyMailOutput}
-                          className='py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center justify-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
-                          {isMailCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                          {isMailCopied ? "Kopieret" : "Kopiér"}
-                      </button>
+                      <ButtonStyles onClick={copyMailOutput}>
+                      {isMailCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      <span>{isMailCopied ? "Kopieret" : "Kopiér"}</span>
+                    </ButtonStyles>
                   </div>
               
               </section>
@@ -222,25 +221,21 @@ export default function ApplicationPage() {
                   />
                   <div className='flex items-center justify-between gap-2'>
                       <div className="flex items-center gap-4">
-                          <button
-                          onClick={copyApplicationOutput}
-                          className='py-1 px-2 sm:py-2 sm:px-3 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
-                          {isApplicationCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                          {isApplicationCopied ? "Kopieret" : "Kopiér"}
-                          </button>
-                          <button
-                              onClick={downloadOutput}
-                              className='py-1 px-2 sm:py-2 sm:px-3  bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md 
-                              hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white'>
+                          <ButtonStyles
+                            onClick={copyApplicationOutput}>
+                            {isApplicationCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                            {isApplicationCopied ? "Kopieret" : "Kopiér"}
+                          </ButtonStyles>
+                          <ButtonStyles
+                              onClick={downloadOutput}>
                               <Download className="h-4 w-4" />
                               Download
-                          </button>
+                          </ButtonStyles>
                       </div>
                       
-                      <button onClick={handleNewTry} className="py-1 px-2 sm:py-2 sm:px-3  bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 cursor-pointer flex items-center gap-2 font-semibold text-white text-xs sm:text-sm rounded-sm sm:rounded-md 
-                              hover:bg-[linear-gradient(90deg,#06b6d4,#6366f1)] hover:text-white"
-                      >Prøv igen
-                      </button>
+                      <ButtonStyles onClick={handleNewTry}>
+                        Prøv igen
+                      </ButtonStyles>
                   </div>
               </section>
           </div>

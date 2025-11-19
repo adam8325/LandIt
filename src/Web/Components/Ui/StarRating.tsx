@@ -1,13 +1,14 @@
 interface StarRatingProps {
   rating: number;
   size?: number; 
+  className?: string;
 }
 
-export default function StarRating({ rating, size = 16 }: StarRatingProps) {
+export default function StarRating({ rating, size = 16, className = "" }: StarRatingProps) {
   const percentage = (rating / 5) * 100;
 
   return (
-    <div className="relative inline-block text-gray-600" style={{ fontSize: size }}>
+    <div className={`relative inline-block text-gray-600 ${className}`} style={{ fontSize: size }}>
       {/* Grå baggrundsstjerner */}
       <div className="flex gap-1">
         {Array(5).fill(0).map((_, i) => (
