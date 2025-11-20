@@ -39,7 +39,7 @@ namespace WebAPI.Controllers
             try
             {
                 var transcription = await _interviewService.TranscribeAnswerAsync(audioFile);
-                return Ok(new { text = transcription });
+                return Ok(new TranscriptionDto { Text = transcription });
             }
             catch (Exception ex)
             {
