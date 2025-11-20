@@ -14,12 +14,12 @@ using Application.DTOs.User;
 
 namespace Infrastructure.Services
 {
-    public class OpenAiService : IAIService
+    public class AIService : IAIService
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
 
-        public OpenAiService(HttpClient httpClient, IConfiguration config)
+        public AIService(HttpClient httpClient, IConfiguration config)
         {
             _httpClient = httpClient;
             _apiKey = config["OpenAI:ApiKey"] ?? throw new ArgumentNullException("OpenAI API key not configured");

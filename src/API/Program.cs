@@ -19,7 +19,7 @@ var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
 builder.Services.AddSingleton(new OpenAIClient(apiKey));
 
 builder.Configuration["OpenAI:ApiKey"] = apiKey; // <-- tilføj denne linje
-builder.Services.AddHttpClient<IAIService, OpenAiService>();
+builder.Services.AddHttpClient<IAIService, AIService>();
 builder.Services.AddScoped<IFileProcessing, FileProcessing>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
 builder.Services.AddScoped<IInterviewService, InterviewService>();

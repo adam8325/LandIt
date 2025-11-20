@@ -43,7 +43,7 @@ namespace Infrastructure.Tests.Services
                 Content = new StringContent(wrapper, Encoding.UTF8, "application/json")
             });
             var http = new HttpClient(handler);
-            var svc = new OpenAiService(http, GetConfiguration());
+            var svc = new AIService(http, GetConfiguration());
 
             var dto = new UserDocumentDto { CvText = new string('C', 120), JobPostingText = new string('J', 120) };
 
@@ -72,7 +72,7 @@ namespace Infrastructure.Tests.Services
                 Content = new StringContent(wrapper, Encoding.UTF8, "application/json")
             });
             var http = new HttpClient(handler);
-            var svc = new OpenAiService(http, GetConfiguration());
+            var svc = new AIService(http, GetConfiguration());
 
             var dto = new UserDocumentDto { CvText = new string('C', 120), JobPostingText = new string('J', 120) };
 
@@ -106,7 +106,7 @@ namespace Infrastructure.Tests.Services
                 Content = new StringContent(wrapper, Encoding.UTF8, "application/json")
             });
             var http = new HttpClient(handler);
-            var svc = new OpenAiService(http, GetConfiguration());
+            var svc = new AIService(http, GetConfiguration());
 
             var responses = new List<UserAnswerDto>
             {
@@ -136,7 +136,7 @@ namespace Infrastructure.Tests.Services
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             });
             var http = new HttpClient(handler);
-            var svc = new OpenAiService(http, GetConfiguration());
+            var svc = new AIService(http, GetConfiguration());
 
             using var ms = new MemoryStream(Encoding.UTF8.GetBytes("dummy"));
 
