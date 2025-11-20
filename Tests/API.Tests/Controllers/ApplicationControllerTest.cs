@@ -5,47 +5,93 @@ using API.Controllers;
 using Application.Interfaces.IApplicationService;
 using Application.DTOs.User;
 using Application.DTOs.ApplicationResponse;
+using Moq;
 
 namespace API.Tests.Controllers
 {
     public class ApplicationControllerTests
     {
-        public class FakeApplicationService : IApplicationService
-        {
-            public Task<GeneratedApplicationDto> GenerateApplication(UserDocumentDto request)
-            {
-                var dto = new GeneratedApplicationDto
-                {
-                    ApplicationText = "Generated application text",
-                    EmailDraft = "Dear Company, ...",
-                    MatchScore = 92.5
-                };
-                return Task.FromResult(dto);
-            }
-        }
-
         [Fact]
-        public async Task Generate_ReturnsOk_WithGeneratedApplicationDto()
+        public async Task Generate_ReturnsOk_WithCorrectResponse()
         {
             // Arrange
-            var fakeService = new FakeApplicationService();
-            var controller = new ApplicationController(fakeService);
+            var expected = new GeneratedApplicationDto
+            {
+                ApplicationText = "Generated",
+                EmailDraft = "Dear ...",
+                MatchScore = 90
+            };
+
+            var mock = new Mock<IApplicationService>();
+            mock.Setup(s => s.GenerateApplication(It.IsAny<UserDocumentDto>()))
+                .ReturnsAsync(expected);
+
+            var controller = new ApplicationController(mock.Object);
+
+            // Act
+            var result = await controller.Generate(new UserDocumentDto { CvText = "cv" });
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var dto = Assert.IsType<GeneratedApplicationDto>(okResult.Value);
+
+            Assert.Equal(expected.ApplicationText, dto.ApplicationText);
+            Assert.Equal(expected.EmailDraft, dto.EmailDraft);
+            Assert.Equal(expected.MatchScore, dto.MatchScore);
+
+            mock.Verify(s => s.GenerateApplication(It.IsAny<UserDocumentDto>()), Times.Once);
+        }
+
+
+        [Fact]
+        public async Task Generate_ReturnsInternalServerError_WhenServiceThrows()
+        {
+            // Arrange
+            var mockService = new Mock<IApplicationService>();
+
+            mockService
+                .Setup(s => s.GenerateApplication(It.IsAny<UserDocumentDto>()))
+                .ThrowsAsync(new Exception("Test exception"));
+
+            var controller = new ApplicationController(mockService.Object);
+
             var request = new UserDocumentDto
             {
-                CvText = "Example CV text that is long enough...",
-                JobPostingText = "Example job posting text that is long enough..."
+                CvText = "cv",
+                JobPostingText = "job posting"
             };
 
             // Act
-            var actionResult = await controller.Generate(request);
+            var result = await controller.Generate(request);
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(actionResult);
-            var value = Assert.IsType<GeneratedApplicationDto>(okResult.Value);
-
-            Assert.Equal("Generated application text", value.ApplicationText);
-            Assert.Equal("Dear Company, ...", value.EmailDraft);
-            Assert.Equal(92.5, value.MatchScore);
+            var errorResult = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(500, errorResult.StatusCode);
+            Assert.Equal("Error: Test exception", errorResult.Value);
         }
+
+
+        // [Fact]
+        // public async Task Generate_ReturnsBadRequest_WhenCVIsNullOrEmpty()
+        // {
+        //     // Arrange
+        //     var fakeService = new FakeApplicationService();
+        //     var controller = new ApplicationController(fakeService);
+        //     var request = new UserDocumentDto
+        //     {
+        //         CvText = "",
+        //         CvFile = null,
+        //         JobPostingText = "We are seeking a software developer..."
+        //     };
+
+        //     // Act
+        //     var actionResult = await controller.Generate(request);
+
+        //     // Assert
+        //     var badRequestResult = Assert.IsType<BadRequestObjectResult>(actionResult);
+        //     Assert.Equal("CV text or CV file must be provided.", badRequestResult.Value);
+        // }
     }
+
+        
 }
