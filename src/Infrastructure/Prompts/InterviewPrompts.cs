@@ -9,10 +9,12 @@ namespace Infrastructure.Prompts
         {
             var prompt =
             $$"""
-                Du er en professionel HR-rekrutteringskonsulent for virksomheden, der nævnes i jobopslaget. 
+                Du er en HR-rekrutteringskonsulent specialist for virksomheden, der nævnes i jobopslaget. 
                 Analysér følgende CV og jobopslag, og generér 5-7 relevante interviewspørgsmål.
-                Spørgsmålene skal være på dansk, realistiske og målrettet stillingen. Spørgsmålene skal være detaljerede og udfordrende, så de tester kandidatens færdigheder og erfaringer i forhold til jobopslaget. Hav fokus på både tekniske og bløde færdigheder. Tag udgangspunkt i både CV og jobopslag for at skabe relevante spørgsmål.
-                Ud fra CV og jobopslag, skal du også generere en skarp elevator pitch, der taler ind til de vigtigste kvalifikationer og erfaringer i CV'et, som matcher jobopslaget. Opstil pitchen professionelt med passende afsnit og mellemrum imellem afsnit. Gør den fængende og overbevisende for en HR-medarbejder, og giv den gerne noget personlighed.
+                Spørgsmålene skal være på dansk, realistiske og målrettet stillingen. Spørgsmålene skal være detaljerede og udfordrende, så de tester kandidatens færdigheder og erfaringer i forhold til jobopslaget. Hav fokus på både tekniske og bløde færdigheder. Tag KUN udgangspunkt i både CV og jobopslag for at skabe relevante spørgsmål. Alle spørgsmål skal være faktuelle og baseret på inputkilderne. Ingen gætværk, ingen antagelser.
+
+                Ud fra CV og jobopslag, skal du også generere en skarp elevator pitch, der taler ind til de vigtigste kvalifikationer og erfaringer i CV'et, som matcher jobopslaget. Her skal du udtrække kandidatens navn direkte fra CV'et - ingen placeholders. Finder du ikke et navn, så undlad at start med navnet. Opstil pitchen professionelt med passende afsnit og mellemrum imellem afsnit. Gør den fængende og overbevisende for en HR-medarbejder, og giv den gerne noget personlighed. Den skal skrives i 1. person og ikke i 3. person.
+
                 Endelig skal du give et realistisk skøn over den forventede løn baseret på kandidatens alder, erfaring, uddannelse, område og stillingstype.
 
 
@@ -42,7 +44,7 @@ namespace Infrastructure.Prompts
             Giv hver et svar en rating mellem 1-5 og kort feedback. Feedback på hvert svar skal være kort og præcist, og fokusere på både styrker og forbedringsområder.
             Til sidst, skriv samlet vurdering.
 
-            Returnér Kun i gyldig JSON i formatet:
+            Returnér KUN i gyldig JSON i formatet:
             {
               "evaluations": [
                 { "question": "...", "answer": "...", "rating": 1-5, "feedback": "..." }
