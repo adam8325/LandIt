@@ -1,7 +1,7 @@
 // pages/ApplicationPage.tsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Copy, Download, Check, Loader2 } from "lucide-react";
+import { Copy, Check, Loader2 } from "lucide-react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import { applicationService } from "../AIService/ApplicationService";
 import { scrollbarStyle } from "../Components/Ui/ScrollbarStyle";
@@ -65,19 +65,6 @@ export default function ApplicationPage() {
       setIsMailCopied(true);
       navigator.clipboard.writeText(mailOutput);
     }
-  };
-
-  const downloadOutput = () => {
-    if (!applicationOutput) return;
-    const blob = new Blob([applicationOutput], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'README.md';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
   };
 
   const handleNewTry = () => {
@@ -226,16 +213,10 @@ export default function ApplicationPage() {
                             {isApplicationCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                             {isApplicationCopied ? "Kopieret" : "Kopiér"}
                           </ButtonStyles>
-                          <ButtonStyles
-                              onClick={downloadOutput}>
-                              <Download className="h-4 w-4" />
-                              Download
+                          <ButtonStyles onClick={handleNewTry} variant={"secondary"}>
+                            Prøv igen
                           </ButtonStyles>
-                      </div>
-                      
-                      <ButtonStyles onClick={handleNewTry}>
-                        Prøv igen
-                      </ButtonStyles>
+                      </div>     
                   </div>
               </section>
           </div>
