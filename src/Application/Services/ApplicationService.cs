@@ -28,6 +28,9 @@ namespace Application.Services.ApplicationService
                  throw new FluentValidation.ValidationException(validationResult.Errors);
             }
 
+            dto.CvText = await _fileProcessing.GetTextAsync(dto.CvText, dto.CvFile);
+            dto.JobPostingText = await _fileProcessing.GetTextAsync(dto.JobPostingText, dto.JobPostingFile);
+
             return await _aiService.GenerateApplicationAsync(dto);
         }
 

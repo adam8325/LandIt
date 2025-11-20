@@ -30,9 +30,10 @@ namespace Application.Services
                  throw new FluentValidation.ValidationException(validationResult.Errors);
             }
 
-            var aiResponse = await _aiService.GenerateInterviewAsync(dto);
+            dto.CvText = await _fileProcessing.GetTextAsync(dto.CvText, dto.CvFile);
+            dto.JobPostingText = await _fileProcessing.GetTextAsync(dto.JobPostingText, dto.JobPostingFile);
 
-            return aiResponse;            
+            return await _aiService.GenerateInterviewAsync(dto);                      
         }
 
         public async Task<string> TranscribeAnswerAsync(IFormFile audioFile)
@@ -57,8 +58,7 @@ namespace Application.Services
                 }
             }
             
-            var result = await _aiService.EvaluateInterviewAsync(responses);
-            return result;
+            return await _aiService.EvaluateInterviewAsync(responses);
         }
     }
 }
