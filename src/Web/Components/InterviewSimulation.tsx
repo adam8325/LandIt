@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Copy, Check, Mic, Square, Loader2 } from "lucide-react";
 import AnimatedSalary from "./AnimatedSalary";
 import { scrollbarStyle } from "./Ui/ScrollbarStyle";
@@ -24,7 +24,6 @@ interface InterviewSimulationProps {
 
 export default function InterviewSimulation({
   questions,
-  introduction,
   onNewTry,
   salaryOutput,
   elevatorOutput,

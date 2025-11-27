@@ -58,6 +58,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowFrontend");
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();

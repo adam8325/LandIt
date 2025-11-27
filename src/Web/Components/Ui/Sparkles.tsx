@@ -1,12 +1,23 @@
 "use client";;
-import React, { useId } from "react";
+import { useId } from "react";
 import { useEffect, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import { cn } from "../../Lib/Utils";
 import { motion, useAnimation } from "motion/react";
 
-export const SparklesCore = (props) => {
+interface SparklesCoreProps {
+  id?: string;
+  className?: string;
+  background?: string;
+  minSize?: number;
+  maxSize?: number;
+  speed?: number;
+  particleColor?: string;
+  particleDensity?: number;
+}
+
+export const SparklesCore = (props: SparklesCoreProps) => {
   const {
     id,
     className,
@@ -27,7 +38,7 @@ export const SparklesCore = (props) => {
   }, []);
   const controls = useAnimation();
 
-  const particlesLoaded = async (container) => {
+  const particlesLoaded = async (container: any) => {
     if (container) {
       controls.start({
         opacity: 1,
@@ -67,8 +78,7 @@ export const SparklesCore = (props) => {
                 onHover: {
                   enable: false,
                   mode: "repulse",
-                },
-                resize: true,
+                }
               },
               modes: {
                 push: {
@@ -145,7 +155,7 @@ export const SparklesCore = (props) => {
                 close: true,
                 fill: true,
                 options: {},
-                type: {},
+                type: "circle",
               },
               groups: {},
               move: {

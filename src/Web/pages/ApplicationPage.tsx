@@ -1,5 +1,4 @@
-// pages/ApplicationPage.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Copy, Check, Loader2 } from "lucide-react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Check, Loader2 } from "lucide-react";
 import { interviewService } from "../AIService/InterviewService";
