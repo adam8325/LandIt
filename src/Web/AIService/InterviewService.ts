@@ -1,9 +1,11 @@
 import axios from "axios";
 import type { InterviewEvaluationRequest, InterviewEvaluationResult, InterviewStartRequest, InterviewStartResponse } from "../Models/InterviewModels";
 
-const INTERVIEW_START_URL = "https://localhost:7131/api/Interview/start";
-const INTERVIEW_EVALUATE_URL = "https://localhost:7131/api/Interview/evaluate";
-const INTERVIEW_TRANSCRIBE_URL = "https://localhost:7131/api/Interview/transcribe";
+const API_BASE = import.meta.env.VITE_API_URL as string;
+
+const INTERVIEW_START_URL = API_BASE + "/Interview/start";
+const INTERVIEW_EVALUATE_URL = API_BASE + "/Interview/evaluate";
+const INTERVIEW_TRANSCRIBE_URL = API_BASE + "/Interview/transcribe";
 
 export const interviewService = {
     async generateQuestions(data: InterviewStartRequest):

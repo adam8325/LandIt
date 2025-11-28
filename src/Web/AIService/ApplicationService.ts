@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { ApplicationRequest, ApplicationResponse } from "../Models/ApplicationModels";
 
-const API_URL = "https://localhost:7131/api/Application/generate";
+const API_URL = import.meta.env.VITE_API_URL + "/Application/generate";
 
 export const applicationService = {
   async generateApplication(data: ApplicationRequest): Promise<ApplicationResponse> {
