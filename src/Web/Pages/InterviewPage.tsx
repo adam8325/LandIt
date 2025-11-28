@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { Check, Loader2 } from "lucide-react";
 import { interviewService } from "../AIService/InterviewService";
 import { useFileInput } from "../Hooks/useFileInput";
-import { FileInputSection } from "../Components/FileInputSection";
-import InterviewSimulation from "../Components/InterviewSimulation";
+import { FileInputSection } from "../Components-temp/FileInputSection";
+import InterviewSimulation from "../Components-temp/InterviewSimulation";
 import type { InterviewEvaluationResult } from "../Models/InterviewModels";
 
 export default function InterviewPage() {   
