@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { Copy, Check, Loader2 } from "lucide-react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import { applicationService } from "../AIService/ApplicationService";
-import { scrollbarStyle } from "../Components-temp/Ui/ScrollbarStyle";
+import { scrollbarStyle } from "../Components/Ui/ScrollbarStyle";
 import { useFileInput } from "../Hooks/useFileInput";
-import { FileInputSection } from "../Components-temp/FileInputSection";
-import ButtonStyles from "../Components-temp/Ui/ButtonStyles";
+import { FileInputSection } from "../Components/FileInputSection";
+import ButtonStyles from "../Components/Ui/ButtonStyles";
 
 export default function ApplicationPage() {
   // File input hooks
