@@ -31,7 +31,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:5173", "https://landit-frontend.vercel.app")
+            policy.WithOrigins("http://localhost:5173", "https://land-it.vercel.app")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
