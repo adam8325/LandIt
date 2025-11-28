@@ -3,7 +3,7 @@ import { useId } from "react";
 import { useEffect, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
-import { cn } from "../../Lib-temp/Utils";
+import { cn } from "../../Lib/Utils";
 import { motion, useAnimation } from "motion/react";
 
 interface SparklesCoreProps {
