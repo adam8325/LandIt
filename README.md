@@ -36,8 +36,8 @@
   - Fil-ekstraktion (PDF/DOCX): [src/Infrastructure/Services/FileProcessing.cs](src/Infrastructure/Services/FileProcessing.cs)  
   - Prompts: [src/Infrastructure/Prompts/ApplicationPrompt.cs](src/Infrastructure/Prompts/ApplicationPrompt.cs), [src/Infrastructure/Prompts/InterviewPrompts.cs](src/Infrastructure/Prompts/InterviewPrompts.cs)
 - src/Web — Frontend (Vite, React, TypeScript/JSX, Tailwind)
-  - Sider: [src/Web/pages/ApplicationPage.tsx](src/Web/pages/ApplicationPage.tsx), [src/Web/pages/InterviewPage.tsx](src/Web/pages/InterviewPage.tsx)
-  - Genbrugelige komponenter: [src/Web/Components/FileInputSection.tsx](src/Web/Components/FileInputSection.tsx), [src/Web/components/InterviewSimulation.tsx](src/Web/components/InterviewSimulation.tsx)
+  - Sider: [src/Web/Pages/ApplicationPage.tsx](src/Web/Pages/ApplicationPage.tsx), [src/Web/Pages/InterviewPage.tsx](src/Web/Pages/InterviewPage.tsx)
+  - Genbrugelige komponenter: [src/Web/Components/FileInputSection.tsx](src/Web/Components/FileInputSection.tsx), [src/Web/Components/InterviewSimulation.tsx](src/Web/Components/InterviewSimulation.tsx)
   - Hooks: [src/Web/Hooks/useFileInput.ts](src/Web/Hooks/useFileInput.ts)
 - Tests — xUnit / integration tests (dotnet) og JS tests hvis tilføjet: `Tests/*`
 
