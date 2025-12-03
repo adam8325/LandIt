@@ -2,7 +2,7 @@
 
 ## Kort og godt
 - LandIt er din AI-assistent til jobsøgning, og indeholder alt, hvad du har brug for til jobsøgningen.
-- Prøv selv appen og se om du kan LandIt: 
+- Prøv selv appen og se om du kan LandIt: https://land-it.vercel.app/
 
 ## Vigtigste features
 - Generér komplet ansøgning + e-mail-udkast og match-score.
@@ -23,7 +23,6 @@
 - SRP — Single Responsibility Principle: hver klasse/funktion skal have ét ansvar (fx lad InterviewPrompts.cs kun bygge prompts, og FileProcessing.cs kun ekstraktere tekst).
 - SOC — Separation of Concerns: hold kontrakter/DTO’er i Application og implementeringer i Infrastructure (se Application vs src/Infrastructure).
 - DIP — Dependency Inversion Principle: services i Application skal afhænge af interfaces (fx IAIService) defineret i Application og registreres med implementations i API/composition root (src/API/Program.cs).
-- KISS — Keep It Simple, Stupid: hold prompt‑tekster og parsing klar og robuste
 
 ## Arkitektur (kort)
 - src/API — Web API med Controller Endpoints / composition root (DI + Program.cs)  
