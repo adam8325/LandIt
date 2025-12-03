@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { InterviewEvaluationRequest, InterviewEvaluationResult, InterviewStartRequest, InterviewStartResponse } from "../Models/InterviewModels";
 
-const API_BASE = import.meta.env.VITE_API_URL as string;
+const API_BASE = import.meta.env.VITE_API_URL || "https://localhost:7131/api";
 
 const INTERVIEW_START_URL = API_BASE + "/Interview/start";
 const INTERVIEW_EVALUATE_URL = API_BASE + "/Interview/evaluate";
