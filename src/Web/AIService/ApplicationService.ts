@@ -4,9 +4,6 @@ import type { ApplicationRequest, ApplicationResponse } from "../Models/Applicat
 const API_BASE = import.meta.env.VITE_API_URL || "https://localhost:7131/api";
 const API_URL = `${API_BASE}/Application/generate`;
 
-console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
-console.log("API_URL:", API_URL);
-
 export const applicationService = {
   async generateApplication(data: ApplicationRequest): Promise<ApplicationResponse> {
     const formData = new FormData();
